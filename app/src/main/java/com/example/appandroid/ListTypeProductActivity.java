@@ -10,5 +10,7 @@ public class ListTypeProductActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_type_product);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 }
