@@ -12,7 +12,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.appandroid.ListProductActivity;
-import com.example.appandroid.ListTypeProductActivity;
 import com.example.appandroid.R;
 
 import java.util.List;

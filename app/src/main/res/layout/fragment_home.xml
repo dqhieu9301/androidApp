@@ -20,6 +20,7 @@
                 android:paddingTop="15dp"
                 android:background="#f59e0b">
                 <EditText
+                    android:id="@+id/searchProduct"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginRight="15dp"
@@ -27,7 +28,7 @@
                     android:background="@drawable/rounded_edittext"
                     android:drawableLeft="@drawable/baseline_search_24"
                     android:paddingLeft="10dp"
-                    android:hint="Nhập loại sản phẩm"></EditText>
+                    android:hint="Nhập tên món ăn "></EditText>
                 <androidx.recyclerview.widget.RecyclerView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"

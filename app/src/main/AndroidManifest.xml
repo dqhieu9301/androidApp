@@ -19,9 +19,6 @@
             android:name=".DetailProductActivity"
             android:exported="false" />
         <activity
-            android:name=".ListTypeProductActivity"
-            android:exported="false" />
-        <activity
             android:name=".RegisterActivity"
             android:exported="false" />
         <activity
