@@ -47,7 +47,6 @@ public class HomeFragment extends Fragment {
         actionListTypeOfFood();
 
         editText = (EditText) view.findViewById(R.id.searchProduct);
-        editText.requestFocus();
         editText.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {

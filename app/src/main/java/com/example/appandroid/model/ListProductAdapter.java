@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.appandroid.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -35,10 +36,10 @@ public class ListProductAdapter extends RecyclerView.Adapter<ListProductAdapter.
         if(product == null) {
             return;
         }
-        int id = context.getResources().getIdentifier(product.getPathImage(), "drawable", context.getPackageName());
-        holder.name.setText(product.getNameProduct().toString());
+//        int id = context.getResources().getIdentifier(product.getPath(), "drawable", context.getPackageName());
+        holder.name.setText(product.getName().toString());
         holder.cost.setText(product.getCost() + " VND");
-        holder.imageView.setImageResource(id);
+        Picasso.get().load(product.getPath()).into(holder.imageView);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

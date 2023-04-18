@@ -1,25 +1,35 @@
 package com.example.appandroid.model;
 
 public class Product {
-    private String nameProduct, type, pathImage;
+    private int id;
+    private String name, type, path;
     private int cost, quantity;
 
     public Product() {}
 
-    public Product(String nameProduct, String type, String pathImage, int cost, int quantity) {
-        this.nameProduct = nameProduct;
+    public Product(int id, String name, String type, String path, int cost, int quantity) {
+        this.id = id;
+        this.name = name;
         this.type = type;
-        this.pathImage = pathImage;
+        this.path = path;
         this.cost = cost;
         this.quantity = quantity;
     }
 
-    public String getNameProduct() {
-        return nameProduct;
+    public int getId() {
+        return id;
     }
 
-    public void setNameProduct(String nameProduct) {
-        this.nameProduct = nameProduct;
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getType() {
@@ -30,12 +40,12 @@ public class Product {
         this.type = type;
     }
 
-    public String getPathImage() {
-        return pathImage;
+    public String getPath() {
+        return path;
     }
 
-    public void setPathImage(String pathImage) {
-        this.pathImage = pathImage;
+    public void setPath(String path) {
+        this.path = path;
     }
 
     public int getCost() {
