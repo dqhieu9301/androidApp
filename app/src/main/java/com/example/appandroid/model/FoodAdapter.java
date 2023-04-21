@@ -47,8 +47,9 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
         int id = context.getResources().getIdentifier(product.getPathImage(),"drawable", context.getPackageName());
         holder.img.setImageResource(id);
         holder.name.setText(product.getNameProduct().toString());
-        holder.gia.setText("Giá: " + product.getCost() + " VND");
-        holder.soluong.setText("Số lượng: " +product.getQuantity());
+        holder.cost.setText("Giá: " + product.getCost() + " VND");
+        holder.quantity.setText(product.getQuantity()+"");
+        holder.total.setText("Tổng: "+ product.getCost()* product.getQuantity()+" VND");
     }
 
     @Override
@@ -60,13 +61,14 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
 
     public class FoodViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         private ImageView img;
-        private TextView name, gia, soluong;
+        private TextView name, cost, quantity, total;
         public FoodViewHolder(@NonNull View itemView){
             super(itemView);
             img = itemView.findViewById(R.id.img);
             name = itemView.findViewById(R.id.name);
-            gia = itemView.findViewById(R.id.gia);
-            soluong = itemView.findViewById(R.id.soluong);
+            cost = itemView.findViewById(R.id.cost);
+            quantity = itemView.findViewById(R.id.quantity);
+            total = itemView.findViewById(R.id.total);
             itemView.setOnClickListener(this);
         }
         public  void  onClick(View view){

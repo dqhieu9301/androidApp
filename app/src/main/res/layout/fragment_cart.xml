@@ -6,78 +6,96 @@
     android:layout_height="match_parent"
     tools:context=".ui.cart.CartFragment">
 
-    <LinearLayout
+    <ImageView
+        android:id="@+id/imageback"
+        android:layout_width="60dp"
+        android:layout_height="67dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_weight="1"
+        android:src="?attr/actionModeCloseDrawable">
+
+    </ImageView>
+
+    <TextView
+
+        android:id="@+id/textView"
+
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        android:layout_marginLeft="72dp"
+        android:textColor="@color/purple_200"
+
+        android:textStyle="bold"
+        android:layout_gravity="center"
+        android:text="Giỏ hàng"
+        android:textSize="50dp"
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imageback">
+
+    </TextView>
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="320dp"
+        android:id="@+id/recycleView_listFoods"
+        app:layout_constraintTop_toBottomOf="@id/imageback"
+
+        >
+
+    </androidx.recyclerview.widget.RecyclerView>
+    <TextView
+        android:id="@+id/smalltitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        tools:layout_editor_absoluteX="1dp"
-        tools:layout_editor_absoluteY="1dp">
+        android:layout_margin="10dp"
+        android:gravity="center"
+        android:textSize="20dp"
+        android:text="Các món khác có thể bạn thích"
+        app:layout_constraintTop_toBottomOf="@id/recycleView_listFoods">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+    </TextView>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycleView_listProducts"
+        android:layout_width="match_parent"
+        android:layout_height="155dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintTop_toBottomOf="@id/smalltitle">
 
-            <ImageView
-                android:id="@+id/imageback"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:src="?attr/actionModeCloseDrawable" />
 
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="261dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="Giỏ hàng"
-                android:textSize="50dp"
-                android:layout_gravity="center"
-                android:gravity="center"
-                />
-        </LinearLayout>
+    </androidx.recyclerview.widget.RecyclerView>
+    <TextView
+        android:id="@+id/title_payment"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:textColor="@color/design_default_color_error"
+        android:text="Tổng thanh toán: \n 230000 VND"
+        android:textSize="25dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/recycleView_listProducts"
+        >
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycleView_listFood"
-            android:layout_width="match_parent"
-            android:layout_height="320dp" />
+    </TextView>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="46dp"
-            android:gravity="center"
-            android:textSize="20dp"
-            android:text="Các món khác có thể bạn thích">
+    <Button
+        android:id="@+id/button"
+        android:layout_width="156dp"
+        android:layout_height="95dp"
+        android:layout_weight="1"
+        android:textSize="30dp"
+        android:textStyle="bold"
 
-        </TextView>
+        android:textColor="@color/white"
+        app:layout_constraintTop_toBottomOf="@id/recycleView_listProducts"
+        app:layout_constraintLeft_toRightOf="@+id/title_payment"
+        android:text="Mua" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycleView_listProduct"
-            android:layout_width="match_parent"
-            android:layout_height="155dp">
 
-        </androidx.recyclerview.widget.RecyclerView>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="95dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_margin="10dp"
-                android:gravity="center"
-                android:text="Tổng thanh toán: \n 230000 VND"
-                android:textSize="25dp"></TextView>
-
-            <Button
-                android:id="@+id/button"
-                android:layout_width="156dp"
-                android:layout_height="95dp"
-                android:layout_weight="1"
-                android:text="Button" />
-        </LinearLayout>
-
-    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

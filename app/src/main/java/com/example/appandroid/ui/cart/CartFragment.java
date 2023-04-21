@@ -27,8 +27,8 @@ public class CartFragment extends Fragment implements FoodAdapter.FoodItemLíste
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_cart, container, false);
-        recyclerView1 = view.findViewById(R.id.recycleView_listFood);
-        recyclerView2 = view.findViewById(R.id.recycleView_listProduct);
+        recyclerView1 = view.findViewById(R.id.recycleView_listFoods);
+        recyclerView2 = view.findViewById(R.id.recycleView_listProducts);
         Context context = getContext();
         foodAdapter = new FoodAdapter(getList(),context);
         productAdapter = new ListProductAdapter(getList(),context);
@@ -48,9 +48,11 @@ public class CartFragment extends Fragment implements FoodAdapter.FoodItemLíste
         String path_image = "@drawable/pizza";
         list.add(new Product("pizza","bánh",path_image,200000,1));
         path_image = "@drawable/hamburger";
-        list.add(new Product("hamburger","bánh",path_image,30000,1));
+        list.add(new Product("hamburger","bánh",path_image,30000,2));
         path_image = "@drawable/fried_chicken";
-        list.add(new Product("fried_chicken","bánh",path_image,50000,1));
+        list.add(new Product("fried_chicken","bánh",path_image,50000,3));
+        list.add(new Product("fried_chicken","bánh",path_image,50000,3));
+        list.add(new Product("fried_chicken","bánh",path_image,50000,3));
         return list;
     }
 
