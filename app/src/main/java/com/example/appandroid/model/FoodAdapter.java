@@ -1,7 +1,10 @@
 package com.example.appandroid.model;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.CpuUsageInfo;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -84,7 +87,9 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
                 pList.set(position_temp, itemCart);
                 OkHttpClient client = new OkHttpClient();
                 String url = "http://192.168.121.1:3000/api/cart-product/update/"+itemCart.getId();
-                Request request = new Request.Builder().url(url).build();
+                SharedPreferences sharedPreferences = v.getContext().getSharedPreferences("MyPrefs", MODE_PRIVATE);
+                String token = sharedPreferences.getString("token", "");
+                Request request = new Request.Builder().url(url).addHeader("Authorization", "Bearer " + token).build();
                 try (Response response = client.newCall(request).execute()) {
                     String responseData = response.body().string();
                     // Process the response data here
@@ -101,7 +106,9 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
                     pList.set(position_temp, itemCart);
                     OkHttpClient client = new OkHttpClient();
                     String url = "http://192.168.121.1:3000/api/cart-product/update/"+itemCart.getId();
-                    Request request = new Request.Builder().url(url).build();
+                    SharedPreferences sharedPreferences = v.getContext().getSharedPreferences("MyPrefs", MODE_PRIVATE);
+                    String token = sharedPreferences.getString("token", "");
+                    Request request = new Request.Builder().url(url).addHeader("Authorization", "Bearer " + token).build();
                     try (Response response = client.newCall(request).execute()) {
                         String responseData = response.body().string();
                         // Process the response data here
@@ -117,7 +124,9 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
                 pList.remove(itemCart);
                 OkHttpClient client = new OkHttpClient();
                 String url = "http://192.168.121.1:3000/api/cart-product/delete/"+itemCart.getId();
-                Request request = new Request.Builder().url(url).build();
+                SharedPreferences sharedPreferences = v.getContext().getSharedPreferences("MyPrefs", MODE_PRIVATE);
+                String token = sharedPreferences.getString("token", "");
+                Request request = new Request.Builder().url(url).addHeader("Authorization", "Bearer " + token).build();
                 try (Response response = client.newCall(request).execute()) {
                     String responseData = response.body().string();
                     // Process the response data here

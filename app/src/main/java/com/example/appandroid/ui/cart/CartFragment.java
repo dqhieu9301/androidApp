@@ -1,8 +1,11 @@
 package com.example.appandroid.ui.cart;
 
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,13 +20,13 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.appandroid.ListProductActivity;
 import com.example.appandroid.MainActivity;
 import com.example.appandroid.R;
 import com.example.appandroid.model.FoodAdapter;
 import com.example.appandroid.model.ItemCart;
 import com.example.appandroid.model.ListProductAdapter;
 import com.example.appandroid.model.Product;
+import com.google.gson.Gson;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import com.squareup.moshi.Types;
@@ -39,8 +41,10 @@ import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class CartFragment extends Fragment {
@@ -50,7 +54,7 @@ public class CartFragment extends Fragment {
     private TextView total_payment;
     private ImageView imageback;
     private Button buttonBuy;
-
+    private List<ItemCart> listItemCarts;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_cart, container, false);
@@ -61,7 +65,7 @@ public class CartFragment extends Fragment {
         buttonBuy = view.findViewById(R.id.buttonBuy);
 
         int total = 0;
-        List<ItemCart> listItemCarts = getRecylerView();
+        getRecylerView();
         for (ItemCart itemCart : listItemCarts) {
             total += itemCart.getQuantity() + itemCart.getProduct().getCost();
         }
@@ -113,15 +117,18 @@ public class CartFragment extends Fragment {
         }
     }
 
-    private List<ItemCart> getRecylerView() {
-        final List<ItemCart>[] ItemCarts = new List[]{new ArrayList<>()};
+    private void getRecylerView() {
+
         OkHttpClient client = new OkHttpClient();
         Moshi moshi = new Moshi.Builder().build();
         Type productsType = Types.newParameterizedType(List.class, ItemCart.class);
         JsonAdapter<List<ItemCart>> jsonAdapter = moshi.adapter(productsType);
 
         String url = "http://192.168.121.1:3000/api/cart-product/getAll";
-        Request request = new Request.Builder().url(url).build();
+
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        String token = sharedPreferences.getString("token", "");
+        Request request = new Request.Builder().url(url).addHeader("Authorization", "Bearer " + token).build();
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -133,9 +140,9 @@ public class CartFragment extends Fragment {
                 String json = response.body().string();
                 try {
                     JSONObject reader = new JSONObject(json);
-                    String listItemCarts = reader.getString("listProduct");
-                    ItemCarts[0] = jsonAdapter.fromJson(listItemCarts);
-                    actionListItemCart(ItemCarts[0]);
+                    String item_srting = reader.getString("listProduct");
+                    listItemCarts = jsonAdapter.fromJson(item_srting);
+                    actionListItemCart(listItemCarts);
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
                 }
@@ -143,14 +150,12 @@ public class CartFragment extends Fragment {
 
 
         });
-        return ItemCarts[0];
     }
 
 
-    private void actionListItemCart(List<ItemCart> listItemCart) {
+    private void actionListItemCart(List<ItemCart> ItemCarts) {
         Context context = getContext();
-
-        foodAdapter = new FoodAdapter(listItemCart, context);
+        foodAdapter = new FoodAdapter(ItemCarts, context);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 1);
         recyclerView1.setLayoutManager(gridLayoutManager);
         recyclerView1.setAdapter(foodAdapter);
@@ -159,11 +164,11 @@ public class CartFragment extends Fragment {
     private List<Product> getList() {
         List<Product> list = new ArrayList<>();
         Context context = getContext();
-        String path_image = "@drawable/pizza";
+        String path_image = "http://res.cloudinary.com/doe8iuzbo/image/upload/v1682134318/ejo8rvmlf0zf9m1qp7mt.png";
         list.add(new Product(1, "pizza", "bánh", path_image, 200000, 1));
-        path_image = "@drawable/hamburger";
+        path_image = "http://res.cloudinary.com/doe8iuzbo/image/upload/v1682134334/ngu68ubwokfe9rmoqwxv.png";
         list.add(new Product(2, "hamburger", "bánh", path_image, 30000, 1));
-        path_image = "@drawable/fried_chicken";
+        path_image = "http://res.cloudinary.com/doe8iuzbo/image/upload/v1682135561/kz2vqbixxcvhatvmsgba.png";
         list.add(new Product(3, "fried_chicken", "bánh", path_image, 50000, 1));
         return list;
     }
