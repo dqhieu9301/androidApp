@@ -14,7 +14,7 @@
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
             android:id="@+id/product_image"
-            android:src="@drawable/pizza">
+            android:src="@drawable/cac_loai_banh">
 
         </ImageView>
         <TextView
