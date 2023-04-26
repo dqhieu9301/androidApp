@@ -67,7 +67,7 @@ public class LoginActivity extends AppCompatActivity {
                 String json = gson.toJson(account);
                 MediaType mediaType = MediaType.parse("application/json");
                 RequestBody body = RequestBody.create(mediaType, json);
-                String url = "http://192.168.27.1:3000/api/auth/login";
+                String url = "http://192.168.0.107:3000/api/auth/login";
                 Request request = new Request.Builder().url(url).post(body).build();
                 client.newCall(request).enqueue(new Callback() {
                     @Override
@@ -81,7 +81,7 @@ public class LoginActivity extends AppCompatActivity {
                         try {
                             JSONObject reader = new JSONObject(json);
                             String token = reader.getString("accessToken");
-                            SharedPreferences sharedPreferences = view.getContext().getSharedPreferences("MyPrefs", MODE_PRIVATE);
+                            SharedPreferences sharedPreferences = getApplication().getSharedPreferences("MyPrefs", MODE_PRIVATE);
                             SharedPreferences.Editor editor = sharedPreferences.edit();
                             editor.putString("token", token);
                             editor.apply();

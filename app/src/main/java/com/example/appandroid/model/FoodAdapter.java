@@ -32,8 +32,9 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
 
     private List<ItemCart> pList;
     private Context context;
-
-    public FoodAdapter(List<ItemCart> pList, Context context) {
+    private ItemCart itemCart;
+    private int ps;
+    public FoodAdapter(List<ItemCart> pList,Context context) {
         this.pList = pList;
         this.context = context;
     }
@@ -49,11 +50,15 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull FoodViewHolder holder, int position) {
-        ItemCart itemCart = pList.get(position);
-        int position_temp = position;
+        itemCart = pList.get(position);
+        ps = pList.indexOf(itemCart);
         if (itemCart == null) {
             return;
         }
+
+        SharedPreferences sharedPreferences = context.getApplicationContext().getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        String token = sharedPreferences.getString("token", "");
+        System.out.println(token);
         Picasso.get().load(itemCart.getProduct().getPath()).into(holder.img);
         holder.name.setText(itemCart.getProduct().getName());
         holder.cost.setText("Giá: " + itemCart.getProduct().getCost() + " VND");
@@ -62,7 +67,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
         holder.img.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                context = view.getContext();
+                Context context = view.getContext();
                 TextView textView = (TextView) view.findViewById(R.id.name);
                 String name = textView.getText().toString();
                 Intent intent = new Intent(context, DetailProductActivity.class);
@@ -73,6 +78,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
         holder.name.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Context context = view.getContext();
                 TextView textView = (TextView) view.findViewById(R.id.name);
                 String name = textView.getText().toString();
                 Intent intent = new Intent(context, DetailProductActivity.class);
@@ -84,10 +90,10 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
             @Override
             public void onClick(View v) {
                 itemCart.setQuantity(itemCart.getQuantity() + 1);
-                pList.set(position_temp, itemCart);
+                pList.set(ps, itemCart);
                 OkHttpClient client = new OkHttpClient();
-                String url = "http://192.168.121.1:3000/api/cart-product/update/"+itemCart.getId();
-                SharedPreferences sharedPreferences = v.getContext().getSharedPreferences("MyPrefs", MODE_PRIVATE);
+                String url = "http://192.168.0.107:3000/api/cart-product/update/" + itemCart.getId();
+                SharedPreferences sharedPreferences = context.getSharedPreferences("MyPrefs", MODE_PRIVATE);
                 String token = sharedPreferences.getString("token", "");
                 Request request = new Request.Builder().url(url).addHeader("Authorization", "Bearer " + token).build();
                 try (Response response = client.newCall(request).execute()) {
@@ -103,10 +109,10 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
             public void onClick(View v) {
                 if (itemCart.getQuantity() > 1) {
                     itemCart.setQuantity(itemCart.getQuantity() - 1);
-                    pList.set(position_temp, itemCart);
+                    pList.set(ps, itemCart);
                     OkHttpClient client = new OkHttpClient();
-                    String url = "http://192.168.121.1:3000/api/cart-product/update/"+itemCart.getId();
-                    SharedPreferences sharedPreferences = v.getContext().getSharedPreferences("MyPrefs", MODE_PRIVATE);
+                    String url = "http://192.168.0.107:3000/api/cart-product/update/" + itemCart.getId();
+                    SharedPreferences sharedPreferences = context.getSharedPreferences("MyPrefs", MODE_PRIVATE);
                     String token = sharedPreferences.getString("token", "");
                     Request request = new Request.Builder().url(url).addHeader("Authorization", "Bearer " + token).build();
                     try (Response response = client.newCall(request).execute()) {
@@ -123,8 +129,8 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
             public void onClick(View v) {
                 pList.remove(itemCart);
                 OkHttpClient client = new OkHttpClient();
-                String url = "http://192.168.121.1:3000/api/cart-product/delete/"+itemCart.getId();
-                SharedPreferences sharedPreferences = v.getContext().getSharedPreferences("MyPrefs", MODE_PRIVATE);
+                String url = "http://192.168.0.107:3000/api/cart-product/delete/" + itemCart.getId();
+                SharedPreferences sharedPreferences = context.getSharedPreferences("MyPrefs", MODE_PRIVATE);
                 String token = sharedPreferences.getString("token", "");
                 Request request = new Request.Builder().url(url).addHeader("Authorization", "Bearer " + token).build();
                 try (Response response = client.newCall(request).execute()) {

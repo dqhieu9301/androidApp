@@ -48,6 +48,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class CartFragment extends Fragment {
+    private Context context;
     private RecyclerView recyclerView1, recyclerView2;
     private FoodAdapter foodAdapter;
     private ListProductAdapter productAdapter;
@@ -55,6 +56,14 @@ public class CartFragment extends Fragment {
     private ImageView imageback;
     private Button buttonBuy;
     private List<ItemCart> listItemCarts;
+    private JsonAdapter<List<ItemCart>> jsonAdapter;
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        this.context = context;
+    }
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_cart, container, false);
@@ -66,11 +75,11 @@ public class CartFragment extends Fragment {
 
         int total = 0;
         getRecylerView();
-        for (ItemCart itemCart : listItemCarts) {
-            total += itemCart.getQuantity() + itemCart.getProduct().getCost();
-        }
+//        for (ItemCart itemCart : listItemCarts) {
+//            total += itemCart.getQuantity() + itemCart.getProduct().getCost();
+//        }
         total_payment.setText("Tổng thanh toán\n" + total + " VND");
-        Context context = getContext();
+
         recyclerView2 = view.findViewById(R.id.recycleView_listProducts);
         productAdapter = new ListProductAdapter(getList(), context);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 2);
@@ -92,7 +101,6 @@ public class CartFragment extends Fragment {
         imageback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Context context = getContext();
                 Intent intent = new Intent(context, MainActivity.class);
                 context.startActivity(intent);
             }
@@ -122,9 +130,9 @@ public class CartFragment extends Fragment {
         OkHttpClient client = new OkHttpClient();
         Moshi moshi = new Moshi.Builder().build();
         Type productsType = Types.newParameterizedType(List.class, ItemCart.class);
-        JsonAdapter<List<ItemCart>> jsonAdapter = moshi.adapter(productsType);
+        jsonAdapter = moshi.adapter(productsType);
 
-        String url = "http://192.168.121.1:3000/api/cart-product/getAll";
+        String url = "http://192.168.0.107:3000/api/cart-product/getAll";
 
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("MyPrefs", MODE_PRIVATE);
         String token = sharedPreferences.getString("token", "");
@@ -140,8 +148,9 @@ public class CartFragment extends Fragment {
                 String json = response.body().string();
                 try {
                     JSONObject reader = new JSONObject(json);
-                    String item_srting = reader.getString("listProduct");
-                    listItemCarts = jsonAdapter.fromJson(item_srting);
+                    String item_string = reader.getString("listProduct");
+                    System.out.println(item_string);
+                    listItemCarts = jsonAdapter.fromJson(item_string);
                     actionListItemCart(listItemCarts);
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
@@ -155,6 +164,7 @@ public class CartFragment extends Fragment {
 
     private void actionListItemCart(List<ItemCart> ItemCarts) {
         Context context = getContext();
+        listItemCarts = ItemCarts;
         foodAdapter = new FoodAdapter(ItemCarts, context);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 1);
         recyclerView1.setLayoutManager(gridLayoutManager);
@@ -163,7 +173,6 @@ public class CartFragment extends Fragment {
 
     private List<Product> getList() {
         List<Product> list = new ArrayList<>();
-        Context context = getContext();
         String path_image = "http://res.cloudinary.com/doe8iuzbo/image/upload/v1682134318/ejo8rvmlf0zf9m1qp7mt.png";
         list.add(new Product(1, "pizza", "bánh", path_image, 200000, 1));
         path_image = "http://res.cloudinary.com/doe8iuzbo/image/upload/v1682134334/ngu68ubwokfe9rmoqwxv.png";

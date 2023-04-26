@@ -46,7 +46,7 @@ public class ListProductActivity extends AppCompatActivity {
         Type productsType = Types.newParameterizedType(List.class, Product.class);
         JsonAdapter<List<Product>> jsonAdapter = moshi.adapter(productsType);
 
-        String url = "http://192.168.121.1:3000/api/product/get-list-product?type=" + name;
+        String url = "http://192.168.0.107:3000/api/product/get-list-product?type=" + name;
         Request request = new Request.Builder().url(url).build();
         client.newCall(request).enqueue(new Callback() {
             @Override
