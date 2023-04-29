@@ -41,10 +41,10 @@ public class ListTypeProductFragment extends Fragment {
     }
     private List<TypeFood> getList() {
         List<TypeFood> typeFoodList = new ArrayList<>();
-        typeFoodList.add(new TypeFood(R.drawable.pizza, "Pizza"));
-        typeFoodList.add(new TypeFood(R.drawable.hamburger, "Hamburger"));
-//        typeOfFoodList.add(new TypeFood(R.drawable.khoai_tay_chien, "Potato chips"));
-        typeFoodList.add(new TypeFood(R.drawable.fried_chicken, "Fried chicken"));
+        typeFoodList.add(new TypeFood(R.drawable.do_uong, "Nước"));
+        typeFoodList.add(new TypeFood(R.drawable.cac_loai_banh, "Bánh"));
+        typeFoodList.add(new TypeFood(R.drawable.cac_loai_sup, "Súp"));
+        typeFoodList.add(new TypeFood(R.drawable.do_anh_nhanh, "Đồ ăn nhanh"));
         return  typeFoodList;
     };
 }
