@@ -37,10 +37,10 @@ public class HomeFragment extends Fragment {
 
         ImageSlider imageSlider = (ImageSlider) view.findViewById(R.id.imageSlider);
         ArrayList<SlideModel> slideModels = new ArrayList<>();
-        slideModels.add(new SlideModel(R.drawable.banghieu_1, ScaleTypes.FIT));
-        slideModels.add(new SlideModel(R.drawable.thuonghieu_2, ScaleTypes.FIT));
-        slideModels.add(new SlideModel(R.drawable.thuonghieu_3, ScaleTypes.FIT));
-        slideModels.add(new SlideModel(R.drawable.thuonghieu_4, ScaleTypes.FIT));
+        slideModels.add(new SlideModel(R.drawable.slide_cac_loai_banh, ScaleTypes.FIT));
+        slideModels.add(new SlideModel(R.drawable.slide_cac_loai_do_an_nhanh, ScaleTypes.FIT));
+        slideModels.add(new SlideModel(R.drawable.slide_cac_loai_sup, ScaleTypes.FIT));
+        slideModels.add(new SlideModel(R.drawable.slide_nuoc_uong, ScaleTypes.FIT));
         imageSlider.setImageList(slideModels, ScaleTypes.FIT);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recycleView_listTypeFood);
