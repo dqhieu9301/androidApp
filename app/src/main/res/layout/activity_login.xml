@@ -37,7 +37,7 @@
 
             android:fontFamily="cursive"
             android:gravity="center"
-            android:text="LOGIN"
+            android:text="Đăng Nhập"
             android:textColor="#FDFCFC"
             android:textSize="34sp"
             android:textStyle="bold" />
@@ -62,15 +62,13 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:ems="10"
-                android:hint="Username"
+                android:hint="Tài khoản"
                 android:inputType="textPersonName"
                 android:textColorLink="#F44336" />
         </LinearLayout>
-
         <Space
             android:layout_width="match_parent"
             android:layout_height="15dp" />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="54dp"
@@ -92,12 +90,18 @@
                 android:layout_weight="1"
                 android:ems="10"
 
-                android:hint="Password"
+                android:hint="Mật khẩu"
                 android:inputType="textPassword"
                 android:textColorLink="#F44336" />
 
         </LinearLayout>
-
+        <TextView
+            android:id="@+id/errorAccount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tài khoản hoặc mật khẩu sai"
+            android:textSize="16dp"
+            android:textColor="#000000"/>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="40dp"
@@ -110,7 +114,7 @@
                 android:layout_weight="1"
                 android:layout_marginLeft="5dp"
                 android:gravity="center|left"
-                android:text="Forgot Password?"
+                android:text="Quên mật khẩu?"
                 android:textColor="#FFFFFF" />
 
             <TextView
@@ -121,7 +125,7 @@
                 android:layout_weight="1"
                 android:gravity="center|right|end"
                 android:scrollIndicators="right"
-                android:text="Regster"
+                android:text="Đăng kí"
                 android:textColor="#FFFFFF" />
         </LinearLayout>
 
@@ -131,14 +135,14 @@
             android:layout_height="54dp"
 
             android:backgroundTint="#2196F3"
-            android:text="LOGIN" />
+            android:text="Đăng nhập" />
 
         <TextView
             android:id="@+id/textView2"
             android:layout_width="match_parent"
             android:layout_height="30dp"
             android:gravity="center"
-            android:text="Or login with"
+            android:text="Hoặc đăng nhập với"
             android:textColor="#FFFFFF"
             android:textSize="16sp"
             android:textStyle="bold" />
