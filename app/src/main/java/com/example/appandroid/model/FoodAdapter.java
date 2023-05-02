@@ -2,41 +2,54 @@ package com.example.appandroid.model;
 
 import static android.content.Context.MODE_PRIVATE;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.CpuUsageInfo;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.appandroid.DetailProductActivity;
 import com.example.appandroid.ListProductActivity;
 import com.example.appandroid.R;
+import com.example.appandroid.ui.cart.CartFragment;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder> {
-
     private List<ItemCart> pList;
     private Context context;
     private ItemCart itemCart;
-    private int ps;
-    public FoodAdapter(List<ItemCart> pList,Context context) {
+    private Fragment fragment;
+    public FoodAdapter(List<ItemCart> pList, Context context,Fragment fragment) {
         this.pList = pList;
         this.context = context;
+        this.fragment = fragment;
     }
 
 
@@ -51,14 +64,14 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
     @Override
     public void onBindViewHolder(@NonNull FoodViewHolder holder, int position) {
         itemCart = pList.get(position);
+        int ps;
         ps = pList.indexOf(itemCart);
+
         if (itemCart == null) {
             return;
         }
 
-        SharedPreferences sharedPreferences = context.getApplicationContext().getSharedPreferences("MyPrefs", MODE_PRIVATE);
-        String token = sharedPreferences.getString("token", "");
-        System.out.println(token);
+
         Picasso.get().load(itemCart.getProduct().getPath()).into(holder.img);
         holder.name.setText(itemCart.getProduct().getName());
         holder.cost.setText("Giá: " + itemCart.getProduct().getCost() + " VND");
@@ -67,78 +80,127 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
         holder.img.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Context context = view.getContext();
-                TextView textView = (TextView) view.findViewById(R.id.name);
-                String name = textView.getText().toString();
+
+                String name = itemCart.getProduct().getName();
                 Intent intent = new Intent(context, DetailProductActivity.class);
-                intent.putExtra("name", name);
+                intent.putExtra("product_name", name);
                 context.startActivity(intent);
             }
         });
         holder.name.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Context context = view.getContext();
-                TextView textView = (TextView) view.findViewById(R.id.name);
-                String name = textView.getText().toString();
+                String name = itemCart.getProduct().getName();
                 Intent intent = new Intent(context, DetailProductActivity.class);
-                intent.putExtra("product name", itemCart.getProduct().getName());
+                intent.putExtra("product_name", name);
                 context.startActivity(intent);
             }
         });
         holder.add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                itemCart = pList.get(ps);
                 itemCart.setQuantity(itemCart.getQuantity() + 1);
+                System.out.println(ps);
                 pList.set(ps, itemCart);
+                holder.total.setText("Tổng: " + itemCart.getProduct().getCost() * itemCart.getQuantity() + " VND");
+                holder.quantity.setText(itemCart.getQuantity() + "");
                 OkHttpClient client = new OkHttpClient();
-                String url = "http://192.168.0.107:3000/api/cart-product/update/" + itemCart.getId();
-                SharedPreferences sharedPreferences = context.getSharedPreferences("MyPrefs", MODE_PRIVATE);
+                showTotal_payment();
+                String quantity = String.format("{\"quantity\": %d}", itemCart.getQuantity());
+                MediaType mediaType = MediaType.parse("application/json");
+                RequestBody body = RequestBody.create(mediaType, quantity);
+                SharedPreferences sharedPreferences = context.getApplicationContext().getSharedPreferences("MyPrefs", MODE_PRIVATE);
                 String token = sharedPreferences.getString("token", "");
-                Request request = new Request.Builder().url(url).addHeader("Authorization", "Bearer " + token).build();
-                try (Response response = client.newCall(request).execute()) {
-                    String responseData = response.body().string();
-                    // Process the response data here
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                String url = "http://192.168.100.26:3000/api/cart-product/update/" + itemCart.getId();
+                Request request = new Request.Builder().url(url).put(body).addHeader("Authorization", "Bearer " + token).build();
+                client.newCall(request).enqueue(new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        System.out.println(e);
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        String json = response.body().string();
+                    }
+                });
             }
         });
         holder.sub.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (itemCart.getQuantity() > 1) {
+                    itemCart = pList.get(ps);
                     itemCart.setQuantity(itemCart.getQuantity() - 1);
                     pList.set(ps, itemCart);
+                    holder.total.setText("Tổng: " + itemCart.getProduct().getCost() * itemCart.getQuantity() + " VND");
+                    holder.quantity.setText(itemCart.getQuantity() + "");
+                    showTotal_payment();
                     OkHttpClient client = new OkHttpClient();
-                    String url = "http://192.168.0.107:3000/api/cart-product/update/" + itemCart.getId();
+                    String url = "http://192.168.100.26:3000/api/cart-product/update/" + itemCart.getId();
+                    String quantity = "{\"quantity\": " + itemCart.getQuantity() + "}";
+
+                    MediaType mediaType = MediaType.parse("application/json");
+                    RequestBody body = RequestBody.create(mediaType, quantity);
                     SharedPreferences sharedPreferences = context.getSharedPreferences("MyPrefs", MODE_PRIVATE);
                     String token = sharedPreferences.getString("token", "");
-                    Request request = new Request.Builder().url(url).addHeader("Authorization", "Bearer " + token).build();
-                    try (Response response = client.newCall(request).execute()) {
-                        String responseData = response.body().string();
-                        // Process the response data here
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    Request request = new Request.Builder().url(url).put(body).addHeader("Authorization", "Bearer " + token).build();
+
+                    client.newCall(request).enqueue(new Callback() {
+                        @Override
+                        public void onFailure(Call call, IOException e) {
+                            System.out.println(e);
+                        }
+
+                        @Override
+                        public void onResponse(Call call, Response response) throws IOException {
+                            String json = response.body().string();
+                        }
+                    });
                 }
             }
         });
         holder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pList.remove(itemCart);
+//                pList.remove(itemCart);
                 OkHttpClient client = new OkHttpClient();
-                String url = "http://192.168.0.107:3000/api/cart-product/delete/" + itemCart.getId();
+                String url = "http://192.168.100.26:3000/api/cart-product/delete/" + itemCart.getId();
                 SharedPreferences sharedPreferences = context.getSharedPreferences("MyPrefs", MODE_PRIVATE);
                 String token = sharedPreferences.getString("token", "");
-                Request request = new Request.Builder().url(url).addHeader("Authorization", "Bearer " + token).build();
-                try (Response response = client.newCall(request).execute()) {
-                    String responseData = response.body().string();
-                    // Process the response data here
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                Request request = new Request.Builder().url(url).delete().addHeader("Authorization", "Bearer " + token).build();
+
+                client.newCall(request).enqueue(new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        System.out.println(e);
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        String json = response.body().string();
+                        Gson gson = new Gson();
+
+                        Map<String, Object> map = gson.fromJson(json, new TypeToken<Map<String, Object>>(){}.getType());
+                        String message = (String) map.get("message");
+                        if (message.equals("delete success")){
+                            Context context1 = v.getContext();
+                            ((Activity) context1).runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    // Xóa đối tượng khỏi danh sách của Adapter
+                                    pList.remove(ps);
+                                    notifyItemRemoved(ps);
+                                    notifyItemRangeChanged(ps, pList.size());
+                                    Toast.makeText(context, "Xóa thành công", Toast.LENGTH_SHORT).show();
+                                    showTotal_payment();
+                                }
+                            });
+
+                        }
+                    }
+                });
             }
         });
     }
@@ -149,10 +211,23 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
             return pList.size();
         return 0;
     }
-
+    public void showTotal_payment(){
+        int total = 0;
+        if (pList.size() > 0)
+        {
+            for (ItemCart itemCart : pList) {
+                total += itemCart.getQuantity() * itemCart.getProduct().getCost();
+            }
+        }
+        TextView textView = fragment.getView().findViewById(R.id.total_payment);
+        textView.setText("Tổng thanh toán\n" + total + " VND");
+    }
     public class FoodViewHolder extends RecyclerView.ViewHolder {
         private ImageView img, sub, add;
         private TextView name, cost, quantity, total;
+
+
+
 
         private Button delete;
 
