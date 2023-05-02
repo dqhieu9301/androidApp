@@ -3,6 +3,7 @@ package com.example.appandroid.ui.cart;
 
 import static android.content.Context.MODE_PRIVATE;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -19,14 +20,12 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.appandroid.MainActivity;
 import com.example.appandroid.R;
 import com.example.appandroid.model.FoodAdapter;
 import com.example.appandroid.model.ItemCart;
 import com.example.appandroid.model.ListProductAdapter;
 import com.example.appandroid.model.Product;
-import com.google.gson.Gson;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import com.squareup.moshi.Types;
@@ -41,10 +40,8 @@ import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class CartFragment extends Fragment {
@@ -52,7 +49,7 @@ public class CartFragment extends Fragment {
     private RecyclerView recyclerView1, recyclerView2;
     private FoodAdapter foodAdapter;
     private ListProductAdapter productAdapter;
-    private TextView total_payment;
+    public TextView total_payment;
     private ImageView imageback;
     private Button buttonBuy;
     private List<ItemCart> listItemCarts;
@@ -67,19 +64,12 @@ public class CartFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_cart, container, false);
-
         recyclerView1 = view.findViewById(R.id.recycleView_listFoods);
         total_payment = view.findViewById(R.id.total_payment);
         imageback = view.findViewById(R.id.imageback);
         buttonBuy = view.findViewById(R.id.buttonBuy);
 
-        int total = 0;
         getRecylerView();
-//        for (ItemCart itemCart : listItemCarts) {
-//            total += itemCart.getQuantity() + itemCart.getProduct().getCost();
-//        }
-        total_payment.setText("Tổng thanh toán\n" + total + " VND");
-
         recyclerView2 = view.findViewById(R.id.recycleView_listProducts);
         productAdapter = new ListProductAdapter(getList(), context);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 2);
@@ -132,7 +122,7 @@ public class CartFragment extends Fragment {
         Type productsType = Types.newParameterizedType(List.class, ItemCart.class);
         jsonAdapter = moshi.adapter(productsType);
 
-        String url = "http://192.168.0.107:3000/api/cart-product/getAll";
+        String url = "http://192.168.100.26:3000/api/cart-product/getAll";
 
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("MyPrefs", MODE_PRIVATE);
         String token = sharedPreferences.getString("token", "");
@@ -149,9 +139,14 @@ public class CartFragment extends Fragment {
                 try {
                     JSONObject reader = new JSONObject(json);
                     String item_string = reader.getString("listProduct");
-                    System.out.println(item_string);
                     listItemCarts = jsonAdapter.fromJson(item_string);
-                    actionListItemCart(listItemCarts);
+                    ((Activity) context).runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            actionListItemCart(listItemCarts);
+                        }
+                    });
+
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
                 }
@@ -163,9 +158,14 @@ public class CartFragment extends Fragment {
 
 
     private void actionListItemCart(List<ItemCart> ItemCarts) {
+        int total = 0;
+
+        for (ItemCart itemCart : ItemCarts) {
+            total += itemCart.getQuantity() * itemCart.getProduct().getCost();
+        }
+        total_payment.setText("Tổng thanh toán\n" + total + " VND");
         Context context = getContext();
-        listItemCarts = ItemCarts;
-        foodAdapter = new FoodAdapter(ItemCarts, context);
+        foodAdapter = new FoodAdapter(ItemCarts, context, this);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 1);
         recyclerView1.setLayoutManager(gridLayoutManager);
         recyclerView1.setAdapter(foodAdapter);
