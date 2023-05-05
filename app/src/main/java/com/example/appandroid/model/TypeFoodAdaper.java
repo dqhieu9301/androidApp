@@ -44,7 +44,7 @@ public class TypeFoodAdaper extends RecyclerView.Adapter<TypeFoodAdaper.TypeFood
                 TextView textView = (TextView) view.findViewById(R.id.food_name);
                 String name = textView.getText().toString();
                 Intent intent = new Intent(context, ListProductActivity.class);
-                intent.putExtra("name", name);
+                intent.putExtra("type", name);
                 context.startActivity(intent);
             }
         });

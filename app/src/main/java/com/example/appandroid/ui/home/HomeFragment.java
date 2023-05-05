@@ -56,10 +56,9 @@ public class HomeFragment extends Fragment {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-                    System.out.println(1);
                     Intent intent = new Intent(getActivity(), ListProductActivity.class);
                     String valueEditText = editText.getText().toString();
-                    intent.putExtra("name", valueEditText);
+                    intent.putExtra("search", valueEditText);
                     startActivity(intent);
                     return true;
                 }
