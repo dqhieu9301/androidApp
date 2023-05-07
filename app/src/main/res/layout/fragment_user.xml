@@ -191,7 +191,7 @@
             android:layout_marginLeft="25dp">
 
             <ImageView
-                android:id="@+id/imageView19"
+                android:id="@+id/imagelogout"
                 android:layout_width="37dp"
                 android:layout_height="31dp"
 
