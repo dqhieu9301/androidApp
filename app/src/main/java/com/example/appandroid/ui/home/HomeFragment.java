@@ -2,10 +2,12 @@ package com.example.appandroid.ui.home;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -37,24 +39,26 @@ public class HomeFragment extends Fragment {
 
         ImageSlider imageSlider = (ImageSlider) view.findViewById(R.id.imageSlider);
         ArrayList<SlideModel> slideModels = new ArrayList<>();
-        slideModels.add(new SlideModel(R.drawable.banghieu_1, ScaleTypes.FIT));
-        slideModels.add(new SlideModel(R.drawable.thuonghieu_2, ScaleTypes.FIT));
-        slideModels.add(new SlideModel(R.drawable.thuonghieu_3, ScaleTypes.FIT));
-        slideModels.add(new SlideModel(R.drawable.thuonghieu_4, ScaleTypes.FIT));
+        slideModels.add(new SlideModel(R.drawable.slide_cac_loai_banh, ScaleTypes.FIT));
+        slideModels.add(new SlideModel(R.drawable.slide_cac_loai_do_an_nhanh, ScaleTypes.FIT));
+        slideModels.add(new SlideModel(R.drawable.slide_cac_loai_sup, ScaleTypes.FIT));
+        slideModels.add(new SlideModel(R.drawable.slide_nuoc_uong, ScaleTypes.FIT));
         imageSlider.setImageList(slideModels, ScaleTypes.FIT);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recycleView_listTypeFood);
         actionListTypeOfFood();
 
         editText = (EditText) view.findViewById(R.id.searchProduct);
+        editText.setInputType(InputType.TYPE_CLASS_TEXT);
+        editText.setImeOptions(EditorInfo.IME_ACTION_DONE | EditorInfo.IME_FLAG_NO_EXTRACT_UI | EditorInfo.IME_FLAG_NO_FULLSCREEN);
+        editText.setRawInputType(InputType.TYPE_CLASS_TEXT);
         editText.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-                    System.out.println(1);
                     Intent intent = new Intent(getActivity(), ListProductActivity.class);
                     String valueEditText = editText.getText().toString();
-                    intent.putExtra("name", valueEditText);
+                    intent.putExtra("search", valueEditText);
                     startActivity(intent);
                     return true;
                 }
@@ -72,10 +76,10 @@ public class HomeFragment extends Fragment {
     }
     private List<TypeFood> getList() {
         List<TypeFood> typeFoodList = new ArrayList<>();
-        typeFoodList.add(new TypeFood(R.drawable.pizza, "Pizza"));
-        typeFoodList.add(new TypeFood(R.drawable.hamburger, "Hamburger"));
-//        typeOfFoodList.add(new TypeFood(R.drawable.khoai_tay_chien, "Potato chips"));
-        typeFoodList.add(new TypeFood(R.drawable.fried_chicken, "Fried chicken"));
+        typeFoodList.add(new TypeFood(R.drawable.do_uong, "Nước"));
+        typeFoodList.add(new TypeFood(R.drawable.cac_loai_banh, "Bánh"));
+        typeFoodList.add(new TypeFood(R.drawable.cac_loai_sup, "Súp"));
+        typeFoodList.add(new TypeFood(R.drawable.do_anh_nhanh, "Đồ ăn nhanh"));
         return  typeFoodList;
     };
 
