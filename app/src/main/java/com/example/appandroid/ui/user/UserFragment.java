@@ -26,9 +26,9 @@ public class UserFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_user, container, false);
 
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("MyPrefs", MODE_PRIVATE);
-//        sharedPreferences.edit().clear().commit();
+        sharedPreferences.edit().clear().commit();
         String token = sharedPreferences.getString("token", null);
-        System.out.println(token);
+//        System.out.println(token);
         if(token == null) {
             showCustomDialog();
         }

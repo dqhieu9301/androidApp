@@ -27,4 +27,9 @@
         android:name="com.example.appandroid.ui.cart.CartFragment"
         android:label="@string/title_cart"
         tools:layout="@layout/fragment_cart" />
+    <fragment
+        android:id="@+id/navigation_history"
+        android:name="com.example.appandroid.ui.history.HistoryFragment"
+        android:label="History"
+        tools:layout="@layout/fragment_history" />
 </navigation>
