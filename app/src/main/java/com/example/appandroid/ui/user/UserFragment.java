@@ -1,11 +1,19 @@
 package com.example.appandroid.ui.user;
 
+import static android.content.Context.MODE_PRIVATE;
+
+import android.app.Dialog;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 
 import androidx.annotation.NonNull;
@@ -22,8 +30,10 @@ public class UserFragment extends Fragment {
     private EditText edtsdt;
     private Button btndn;
     private Button btndx;
-    private  Button btnfalse;
-    private  Button btntrue;
+    private Button btnfalse;
+    private Button btntrue;
+
+
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,  ViewGroup container, Bundle savedInstanceState) {
@@ -32,7 +42,7 @@ public class UserFragment extends Fragment {
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("MyPrefs", MODE_PRIVATE);
 //        sharedPreferences.edit().clear().commit();
         String token = sharedPreferences.getString("token", null);
-        System.out.println(token);
+
         if(token == null) {
             showCustomDialog();
         }
