@@ -4,20 +4,20 @@
     <item
         android:id="@+id/navigation_home"
         android:icon="@drawable/ic_home_black_24dp"
-        android:title="@string/title_home" />
+        android:title="Trang trủ" />
     <item
         android:id="@+id/navigation_list_type_product"
         android:icon="@drawable/baseline_view_list_24"
-        android:title="@string/title_list_type_product" />
+        android:title="Danh sách"
+        />
     <item
         android:id="@+id/navigation_user"
         android:icon="@drawable/baseline_account_circle_24"
-        android:title="@string/title_user" />
+        android:title="Người dùng" />
 
     <item
         android:id="@+id/navigation_cart"
         android:icon="@drawable/baseline_shopping_cart_24"
-        android:title="@string/title_cart" />
-
+        android:title="Giỏ hàng" />
 
 </menu>

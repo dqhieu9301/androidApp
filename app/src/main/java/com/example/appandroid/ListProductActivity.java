@@ -44,9 +44,9 @@ public class ListProductActivity extends AppCompatActivity {
         String searchProduct = intent.getStringExtra("search");
         String url = "";
         if(searchProduct == null) {
-            url = "http://192.168.30.105:3000/api/product/get-list-product?type=" + nameProduct;
+            url = "http://20.205.137.244/api/product/get-list-product?type=" + nameProduct;
         } else {
-            url = "http://192.168.30.105:3000/api/product/search-product?search=" + searchProduct;
+            url = "http://20.205.137.244/api/product/search-product?search=" + searchProduct;
         }
         System.out.println(url);
         System.out.println(searchProduct);
