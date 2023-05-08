@@ -220,7 +220,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
             }
         }
         TextView textView = fragment.getView().findViewById(R.id.total_payment);
-        textView.setText("Tổng thanh toán\n" + total + " VND");
+        textView.setText(total + " VND");
     }
     public class FoodViewHolder extends RecyclerView.ViewHolder {
         private ImageView img, sub, add;

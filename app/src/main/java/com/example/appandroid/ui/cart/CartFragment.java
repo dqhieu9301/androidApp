@@ -54,7 +54,6 @@ public class CartFragment extends Fragment {
     private FoodAdapter foodAdapter;
     private ListProductAdapter productAdapter;
     public TextView total_payment;
-    private ImageView imageback;
     private Button buttonBuy;
     private List<ItemCart> listItemCarts;
     private JsonAdapter<List<ItemCart>> jsonAdapter;
@@ -70,7 +69,6 @@ public class CartFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_cart, container, false);
         recyclerView1 = view.findViewById(R.id.recycleView_listFoods);
         total_payment = view.findViewById(R.id.total_payment);
-        imageback = view.findViewById(R.id.imageback);
         buttonBuy = view.findViewById(R.id.buttonBuy);
 
         getRecylerView();
@@ -99,13 +97,6 @@ public class CartFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        imageback.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(context, MainActivity.class);
-                context.startActivity(intent);
-            }
-        });
         buttonBuy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

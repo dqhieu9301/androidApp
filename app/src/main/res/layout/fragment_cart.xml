@@ -6,16 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".ui.cart.CartFragment">
 
-    <ImageView
-        android:id="@+id/imageback"
-        android:layout_width="60dp"
-        android:layout_height="67dp"
-        android:layout_weight="1"
-        android:src="?attr/actionModeCloseDrawable"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-    </ImageView>
 
     <TextView
 
@@ -24,28 +14,34 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginLeft="72dp"
-        android:layout_weight="1"
 
+        android:layout_weight="1"
+        android:background="@color/red"
         android:gravity="center"
         android:text="Giỏ hàng"
-        android:textColor="@color/purple_200"
+        android:textColor="@color/white"
         android:textSize="50dp"
         android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/imageback"
+        app:layout_constraintStart_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
     </TextView>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycleView_listFoods"
+    <ScrollView
+        android:id="@+id/scroll_rv1"
         android:layout_width="match_parent"
         android:layout_height="320dp"
-        app:layout_constraintTop_toBottomOf="@id/imageback"
-
+        app:layout_constraintTop_toBottomOf="@id/textView"
         >
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycleView_listFoods"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/textView"
 
-    </androidx.recyclerview.widget.RecyclerView>
+            >
+
+        </androidx.recyclerview.widget.RecyclerView>
+    </ScrollView>
 
     <TextView
         android:id="@+id/smalltitle"
@@ -55,7 +51,7 @@
         android:gravity="center"
         android:text="Các món khác có thể bạn thích"
         android:textSize="20dp"
-        app:layout_constraintTop_toBottomOf="@id/recycleView_listFoods">
+        app:layout_constraintTop_toBottomOf="@id/scroll_rv1">
 
     </TextView>
 
@@ -71,18 +67,33 @@
     </androidx.recyclerview.widget.RecyclerView>
 
     <TextView
+        android:id="@+id/text_payment"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:text="Tổng thanh toán:"
+        android:textColor="@color/black"
+        android:textSize="25dp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/recycleView_listProducts">
+
+    </TextView>
+    <TextView
         android:id="@+id/total_payment"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:gravity="center"
-        android:text="Tổng thanh toán: \n 230000 VND"
-        android:textColor="@color/design_default_color_error"
+        android:text="230000 VND"
+        android:textColor="@color/red"
         android:textSize="25dp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/recycleView_listProducts">
+        app:layout_constraintTop_toBottomOf="@id/text_payment">
 
     </TextView>
 
