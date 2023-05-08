@@ -2,10 +2,12 @@ package com.example.appandroid.ui.home;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -47,14 +49,16 @@ public class HomeFragment extends Fragment {
         actionListTypeOfFood();
 
         editText = (EditText) view.findViewById(R.id.searchProduct);
+        editText.setInputType(InputType.TYPE_CLASS_TEXT);
+        editText.setImeOptions(EditorInfo.IME_ACTION_DONE | EditorInfo.IME_FLAG_NO_EXTRACT_UI | EditorInfo.IME_FLAG_NO_FULLSCREEN);
+        editText.setRawInputType(InputType.TYPE_CLASS_TEXT);
         editText.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-                    System.out.println(1);
                     Intent intent = new Intent(getActivity(), ListProductActivity.class);
                     String valueEditText = editText.getText().toString();
-                    intent.putExtra("name", valueEditText);
+                    intent.putExtra("search", valueEditText);
                     startActivity(intent);
                     return true;
                 }

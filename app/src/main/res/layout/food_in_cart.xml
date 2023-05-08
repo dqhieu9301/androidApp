@@ -19,7 +19,7 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_margin="5dp"
-            android:src="@drawable/banghieu_1"
+            android:src="@drawable/cac_loai_banh"
             app:layout_constraintStart_toStartOf="parent"
 
             app:layout_constraintTop_toTopOf="parent" />
@@ -63,7 +63,7 @@
             android:id="@+id/delete"
             android:layout_width="wrap_content"
             android:layout_height="32dp"
-            android:background="@color/red"
+            android:background="@color/black"
             android:text="Xóa"
             android:textSize="9dp"
             app:layout_constraintBottom_toTopOf="@+id/total"

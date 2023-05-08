@@ -4,6 +4,7 @@ package com.example.appandroid.ui.cart;
 import static android.content.Context.MODE_PRIVATE;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,6 +12,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -20,6 +22,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.appandroid.LoginActivity;
 import com.example.appandroid.MainActivity;
 import com.example.appandroid.R;
 import com.example.appandroid.model.FoodAdapter;
@@ -76,6 +80,13 @@ public class CartFragment extends Fragment {
         recyclerView2.setLayoutManager(gridLayoutManager);
         recyclerView2.setAdapter(productAdapter);
 
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("MyPrefs", MODE_PRIVATE);
+//        sharedPreferences.edit().clear().commit();
+        String token = sharedPreferences.getString("token", null);
+        System.out.println(token);
+        if(token == null) {
+            showCustomDialog();
+        }
 
         return view;
     }
@@ -105,7 +116,7 @@ public class CartFragment extends Fragment {
 
     private void getBuy() {
         OkHttpClient client = new OkHttpClient();
-        String url = "http://192.168.121.1:3000/api/cart-product/Buy";
+        String url = "http:/192.168.20.103:3001/api/cart-product/Buy";
         Request request = new Request.Builder().url(url).build();
         try (Response response = client.newCall(request).execute()) {
             String responseData = response.body().string();
@@ -122,7 +133,7 @@ public class CartFragment extends Fragment {
         Type productsType = Types.newParameterizedType(List.class, ItemCart.class);
         jsonAdapter = moshi.adapter(productsType);
 
-        String url = "http://192.168.100.26:3000/api/cart-product/getAll";
+        String url = "http://192.168.20.103:3001/api/cart-product/getAll";
 
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("MyPrefs", MODE_PRIVATE);
         String token = sharedPreferences.getString("token", "");
@@ -180,6 +191,24 @@ public class CartFragment extends Fragment {
         path_image = "http://res.cloudinary.com/doe8iuzbo/image/upload/v1682135561/kz2vqbixxcvhatvmsgba.png";
         list.add(new Product(3, "fried_chicken", "bánh", path_image, 50000, 1));
         return list;
+    }
+
+    void showCustomDialog() {
+        final Dialog dialog = new Dialog(getContext());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(true);
+        dialog.setContentView(R.layout.requires_login_modal);
+
+        final Button btnChangeLogin = dialog.findViewById(R.id.btnChangeLogin);
+        btnChangeLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), LoginActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        dialog.show();
     }
 
 }
