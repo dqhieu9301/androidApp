@@ -29,24 +29,34 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class ListProductActivity extends AppCompatActivity {
-
     private RecyclerView recyclerView;
     private ListProductAdapter listProductAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_product);
+        setTitle("Danh sách các món");
 
         recyclerView = findViewById(R.id.recycleView_listProduct);
+
         Intent intent = getIntent();
-        String name = intent.getStringExtra("name");
+        String nameProduct = intent.getStringExtra("type");
+        String searchProduct = intent.getStringExtra("search");
+        String url = "";
+        if(searchProduct == null) {
+            url = "http://20.205.137.244/api/product/get-list-product?type=" + nameProduct;
+        } else {
+            url = "http://20.205.137.244/api/product/search-product?search=" + searchProduct;
+        }
+        System.out.println(url);
+        System.out.println(searchProduct);
+
         Context context = getApplicationContext();
+
         OkHttpClient client = new OkHttpClient();
         Moshi moshi = new Moshi.Builder().build();
         Type productsType = Types.newParameterizedType(List.class, Product.class);
         JsonAdapter<List<Product>> jsonAdapter = moshi.adapter(productsType);
-
-        String url = "http://http://20.205.137.244/api/product/get-list-product?type=" + name;
         Request request = new Request.Builder().url(url).build();
         client.newCall(request).enqueue(new Callback() {
             @Override

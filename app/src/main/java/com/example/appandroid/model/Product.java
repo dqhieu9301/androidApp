@@ -16,6 +16,12 @@ public class Product {
         this.quantity = quantity;
     }
 
+    public Product(String name, int cost, String path) {
+        this.name = name;
+        this.path = path;
+        this.cost = cost;
+    }
+
     public int getId() {
         return id;
     }
