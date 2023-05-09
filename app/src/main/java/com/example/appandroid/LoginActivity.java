@@ -94,7 +94,6 @@ public class LoginActivity extends AppCompatActivity {
                     public void onFailure(Call call, IOException e) {
                         System.out.println(1);
                     }
-
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
                         String json = response.body().string();
@@ -117,13 +116,9 @@ public class LoginActivity extends AppCompatActivity {
                         } catch (JSONException e) {
                             throw new RuntimeException(e);
                         }
-
                     }
-
                 });
-
             }
-
         });
     }
 }
