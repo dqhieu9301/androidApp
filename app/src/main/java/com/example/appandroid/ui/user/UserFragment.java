@@ -18,10 +18,11 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-
 import com.example.appandroid.LoginActivity;
 import com.example.appandroid.MainActivity;
 import com.example.appandroid.R;
+
+import java.util.ResourceBundle;
 
 public class UserFragment extends Fragment {
 
@@ -32,22 +33,38 @@ public class UserFragment extends Fragment {
     private Button btndx;
     private Button btnfalse;
     private Button btntrue;
-
+    private ImageView imageView;
 
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,  ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_user, container, false);
-
+        imageView = view.findViewById(R.id.imagelogout);
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("MyPrefs", MODE_PRIVATE);
 //        sharedPreferences.edit().clear().commit();
         String token = sharedPreferences.getString("token", null);
 
+        System.out.println(token);
         if(token == null) {
             showCustomDialog();
+        }else {
+            logOut();
+            if (token == null){
+                showCustomDialog();
+            }
         }
-
         return view;
+    }
+    void logOut() {
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SharedPreferences sharedPreferences = getContext().getSharedPreferences("MyPrefs", MODE_PRIVATE);
+                sharedPreferences.edit().clear().commit();
+                Intent intent = new Intent(getContext(), MainActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     void showCustomDialog() {
@@ -55,7 +72,6 @@ public class UserFragment extends Fragment {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.requires_login_modal);
-
         final Button btnChangeLogin = dialog.findViewById(R.id.btnChangeLogin);
         btnChangeLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,10 +80,6 @@ public class UserFragment extends Fragment {
                 startActivity(intent);
             }
         });
-
         dialog.show();
     }
-
-
-
 }
