@@ -35,7 +35,7 @@
             android:layout_width="match_parent"
             android:layout_height="83dp"
 
-            android:fontFamily="cursive"
+            android:fontFamily="serif"
             android:gravity="center"
             android:text="Đăng Nhập"
             android:textColor="#FDFCFC"
@@ -125,7 +125,7 @@
                 android:layout_weight="1"
                 android:gravity="center|right|end"
                 android:scrollIndicators="right"
-                android:text="Đăng kí"
+                android:text="Đăng ký"
                 android:textColor="#FFFFFF" />
         </LinearLayout>
 
