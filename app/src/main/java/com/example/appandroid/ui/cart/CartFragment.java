@@ -107,7 +107,7 @@ public class CartFragment extends Fragment {
 
     private void getBuy() {
         OkHttpClient client = new OkHttpClient();
-        String url = "http:/192.168.20.103:3001/api/cart-product/Buy";
+        String url = "http://20.205.137.244/api/cart-product/buy-products-in-cart";
         Request request = new Request.Builder().url(url).build();
         try (Response response = client.newCall(request).execute()) {
             String responseData = response.body().string();
@@ -124,7 +124,7 @@ public class CartFragment extends Fragment {
         Type productsType = Types.newParameterizedType(List.class, ItemCart.class);
         jsonAdapter = moshi.adapter(productsType);
 
-        String url = "http://192.168.20.103:3001/api/cart-product/getAll";
+        String url = "http://20.205.137.244/api/cart-product/getAll";
 
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("MyPrefs", MODE_PRIVATE);
         String token = sharedPreferences.getString("token", "");
@@ -165,7 +165,7 @@ public class CartFragment extends Fragment {
         for (ItemCart itemCart : ItemCarts) {
             total += itemCart.getQuantity() * itemCart.getProduct().getCost();
         }
-        total_payment.setText("Tổng thanh toán\n" + total + " VND");
+        total_payment.setText(total + " VND");
         Context context = getContext();
         foodAdapter = new FoodAdapter(ItemCarts, context, this);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 1);
