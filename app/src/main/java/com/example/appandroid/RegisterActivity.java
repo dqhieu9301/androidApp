@@ -49,7 +49,6 @@ public class RegisterActivity extends AppCompatActivity {
         edttaikhoan= findViewById(R.id.editTexttaikhoan);
         edtmatkhau= findViewById(R.id.editTextmatkhau);
         edtxacnhanmatkhau = findViewById(R.id.editTextxacnhanmatkhau);
-
         imagedangnhap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
