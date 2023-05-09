@@ -1,58 +1,58 @@
 package com.example.appandroid.model;
 
-public class User {
-    private int UserID;
-    private String Fullname;
-    private String Username;
-    private String Addres;
-    private String Phone;
-    protected String Password;
+import java.io.Serializable;
 
-    public int getUserID() {
-        return UserID;
-    }
+public class User implements Serializable {
+  private String username;
+  private String password;
+  private String fullname;
+  private String address;
+  private String phone;
 
-    public void setUserID(int userID) {
-        UserID = userID;
-    }
-
-    public String getFullname() {
-        return Fullname;
-    }
-
-    public void setFullname(String fullname) {
-        Fullname = fullname;
-    }
-
+  public User(String username, String password, String fullname, String address, String phone){
+      this.username = username;
+      this.password = password;
+      this.fullname = fullname;
+      this.address = address;
+      this.phone = phone;
+  }
     public String getUsername() {
-        return Username;
+        return username;
     }
 
     public void setUsername(String username) {
-        Username = username;
-    }
-
-    public String getAddres() {
-        return Addres;
-    }
-
-    public void setAddres(String addres) {
-        Addres = addres;
-    }
-
-    public String getPhone() {
-        return Phone;
-    }
-
-    public void setPhone(String phone) {
-        Phone = phone;
+        this.username = username;
     }
 
     public String getPassword() {
-        return Password;
+        return password;
     }
 
     public void setPassword(String password) {
-        Password = password;
+        this.password = password;
+    }
+
+    public String getFullname() {
+        return fullname;
+    }
+
+    public void setFullname(String fullname) {
+        this.fullname = fullname;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 }
