@@ -34,8 +34,6 @@ public class UserFragment extends Fragment {
     private Button btnfalse;
     private Button btntrue;
     private ImageView imageView;
-
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,  ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_user, container, false);
@@ -43,8 +41,6 @@ public class UserFragment extends Fragment {
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("MyPrefs", MODE_PRIVATE);
 //        sharedPreferences.edit().clear().commit();
         String token = sharedPreferences.getString("token", null);
-
-        System.out.println(token);
         if(token == null) {
             showCustomDialog();
         }else {
@@ -66,7 +62,6 @@ public class UserFragment extends Fragment {
             }
         });
     }
-
     void showCustomDialog() {
         final Dialog dialog = new Dialog(getContext());
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
