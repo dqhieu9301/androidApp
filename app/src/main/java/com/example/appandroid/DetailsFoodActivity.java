@@ -104,7 +104,7 @@ public class DetailsFoodActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             tenmon.setText(name.toUpperCase());
-                            giamon.setText(cost + " VND");
+                            giamon.setText(cost + " VNĐ");
                             mota.setText(describe);
 //                            int resId = getResources().getIdentifier(imageName, "drawable", getPackageName());
 //                            imageView.setImageResource(resId);
@@ -162,7 +162,7 @@ public class DetailsFoodActivity extends AppCompatActivity {
             @Override
             public void run() {
                 tenmondialog.setText(name.toUpperCase());
-                giatiendialog.setText(cost + " VND");
+                giatiendialog.setText(cost + " VNĐ");
                 Picasso.get().load(imageName).into(imageView);
             }
         });
@@ -183,7 +183,7 @@ public class DetailsFoodActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         soluongdialog.setText(Integer.toString(intsoluongdialog));
-                        giatiendialog.setText(Integer.toString(intgiatiendialog) + " VND");
+                        giatiendialog.setText(Integer.toString(intgiatiendialog) + " VNĐ");
                     }
                 });
             }
@@ -217,7 +217,7 @@ public class DetailsFoodActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             soluongdialog.setText(Integer.toString(intsoluongdialog));
-                            giatiendialog.setText(Integer.toString(intgiatiendialog) + " VND");
+                            giatiendialog.setText(Integer.toString(intgiatiendialog) + " VNĐ");
                         }
                     });
                 }
