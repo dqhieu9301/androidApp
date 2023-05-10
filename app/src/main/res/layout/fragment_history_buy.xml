@@ -18,10 +18,11 @@
         android:layout_weight="1"
         android:background="@color/red"
         android:gravity="center"
-        android:text="Giỏ hàng"
+        android:text="Lịch sử mua hàng"
         android:textColor="@color/white"
-        android:textSize="50dp"
+        android:textSize="35dp"
         android:textStyle="bold"
+
         app:layout_constraintStart_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -56,9 +57,9 @@
     </TextView>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycleView_listProducts"
+        android:id="@+id/listRecomendProducts"
         android:layout_width="match_parent"
-        android:layout_height="155dp"
+        android:layout_height="280dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         app:layout_constraintTop_toBottomOf="@id/smalltitle">
@@ -66,48 +67,7 @@
 
     </androidx.recyclerview.widget.RecyclerView>
 
-    <TextView
-        android:id="@+id/text_payment"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:gravity="center"
-        android:text="Tổng thanh toán:"
-        android:textColor="@color/black"
-        android:textSize="25dp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/recycleView_listProducts">
 
-    </TextView>
-    <TextView
-        android:id="@+id/total_payment"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:gravity="center"
-        android:text="0 VND"
-        android:textColor="@color/red"
-        android:textSize="25dp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/text_payment">
-
-    </TextView>
-
-    <Button
-        android:id="@+id/buttonBuy"
-        android:layout_width="156dp"
-        android:layout_height="95dp"
-        android:layout_weight="1"
-        android:text="Mua"
-        android:textColor="@color/white"
-        android:textSize="30dp"
-        android:textStyle="bold"
-        app:layout_constraintLeft_toRightOf="@+id/total_payment"
-        app:layout_constraintTop_toBottomOf="@id/recycleView_listProducts" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
