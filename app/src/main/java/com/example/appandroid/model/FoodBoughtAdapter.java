@@ -5,7 +5,6 @@ import static android.content.Context.MODE_PRIVATE;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,18 +14,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.appandroid.DetailProductActivity;
 import com.example.appandroid.R;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -44,16 +39,18 @@ public class FoodBoughtAdapter extends RecyclerView.Adapter<FoodBoughtAdapter.Fo
     private Context context;
     private ProductHistory productHistory;
 
-    public FoodBoughtAdapter(List<ProductHistory> pList, Context context) {
+    String token;
+
+    public FoodBoughtAdapter(List<ProductHistory> pList, Context context, String token) {
         this.pList = pList;
         this.context = context;
+        this.token = token;
     }
 
     @NonNull
     @Override
     public FoodBoughtAdapter.FoodBoughtViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.food_in_history_bought, parent, false);
-
         return new FoodBoughtAdapter.FoodBoughtViewHolder(view);
     }
 
@@ -69,14 +66,14 @@ public class FoodBoughtAdapter extends RecyclerView.Adapter<FoodBoughtAdapter.Fo
         Picasso.get().load(productHistory.getPath()).into(holder.img);
         holder.name.setText(productHistory.getName());
         holder.cost.setText("Giá: " + productHistory.getCost() + " VND");
-        holder.quantity.setText(productHistory.getQuantity() + "");
+        holder.quantity.setText("Số lượng: " + productHistory.getQuantity() + "");
         holder.total.setText("Tổng: " + productHistory.getCost() * productHistory.getQuantity() + " VND");
-
+        String date_update = productHistory.getUpdated_at().toString().split("T")[0];
+        holder.date.setText("Ngày: " + date_update);
         holder.img.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                String name = productHistory.getName();
                 Intent intent = new Intent(context, DetailProductActivity.class);
                 intent.putExtra("idProduct", productHistory.getId());
                 context.startActivity(intent);
@@ -95,7 +92,7 @@ public class FoodBoughtAdapter extends RecyclerView.Adapter<FoodBoughtAdapter.Fo
             @Override
             public void onClick(View v) {
                 productHistory = pList.get(ps);
-                add_food_to_cart(productHistory);
+                add_food_to_cart(productHistory, token, v);
             }
         });
 
@@ -108,14 +105,12 @@ public class FoodBoughtAdapter extends RecyclerView.Adapter<FoodBoughtAdapter.Fo
         return 0;
     }
 
-    public void add_food_to_cart(ProductHistory productHistory) {
-        String str_body = "{\"id\": " + productHistory.getId() + "\"quantity\": 1 }";
+    public void add_food_to_cart(ProductHistory productHistory, String token, View view) {
+        String str_body = "{\"id\": " + productHistory.getId() + ",\"quantity\": 1}";
         MediaType mediaType = MediaType.parse("application/json");
         RequestBody body = RequestBody.create(mediaType, str_body);
         OkHttpClient client = new OkHttpClient();
-        String url = "http://20.205.137.244/api/cart-product/add_to_cart";
-        SharedPreferences sharedPreferences = context.getSharedPreferences("MyPrefs", MODE_PRIVATE);
-        String token = sharedPreferences.getString("token", "");
+        String url = "http://20.205.137.244/api/cart-product/add-to-cart";
         Request request = new Request.Builder().url(url).post(body).addHeader("Authorization", "Bearer " + token).build();
 
         client.newCall(request).enqueue(new Callback() {
@@ -127,6 +122,15 @@ public class FoodBoughtAdapter extends RecyclerView.Adapter<FoodBoughtAdapter.Fo
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String json = response.body().string();
+                Context context1 = view.getContext();
+                ((Activity) context1).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        Toast.makeText(context, "Thêm vào giỏ thành công", Toast.LENGTH_SHORT).show();
+
+                    }
+                });
             }
         });
 
