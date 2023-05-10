@@ -9,7 +9,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_gravity="top"
         android:layout_marginBottom="10dp">
 
@@ -19,9 +19,10 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_margin="5dp"
+            android:layout_marginStart="36dp"
             android:src="@drawable/cac_loai_banh"
-            app:layout_constraintStart_toStartOf="parent"
 
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
@@ -127,6 +128,7 @@
             tools:layout_editor_absoluteY="16dp">
 
         </TextView>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
