@@ -57,6 +57,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         inital();
 
+        System.out.println(1);
         buttonDK.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

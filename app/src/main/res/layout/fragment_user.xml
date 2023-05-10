@@ -110,7 +110,7 @@
                     android:id="@+id/editTextTextPersonName5"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
-                    android:layout_marginRight="30dp"
+
                     android:ems="10"
                     android:inputType="textPersonName"
                     android:text="123"
@@ -146,7 +146,6 @@
                     android:ems="10"
                     android:inputType="textPersonName"
                     android:text="123"
-                    android:layout_marginRight="30dp"
                     android:textColor="#000000"
                     android:focusable="false"/>
 
@@ -178,7 +177,6 @@
                     android:ems="10"
                     android:inputType="textPersonName"
                     android:text="123"
-                    android:layout_marginRight="30dp"
                     android:textColor="#000000"
                     android:focusable="false"/>
 

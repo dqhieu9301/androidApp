@@ -16,6 +16,7 @@ import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -74,7 +75,10 @@ public class HistoryBuyFragment extends Fragment {
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("MyPrefs", MODE_PRIVATE);
         String token = sharedPreferences.getString("token", null);
         if (token == null) {
-            showCustomDialog();
+            ConstraintLayout containerHistory = view.findViewById(R.id.containerHistory);
+            containerHistory.setVisibility(View.GONE);
+            Intent intent = new Intent(getContext(), LoginActivity.class);
+            startActivity(intent);
         } else {
             getRecylerView(view, token);
         }

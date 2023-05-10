@@ -237,19 +237,24 @@ public class DetailsFoodActivity extends AppCompatActivity {
         acceptConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TextView totalitemsdialog = dialogView.findViewById(R.id.textView9);
-                String totalitems = totalitemsdialog.getText().toString();
-                int idfood = Integer.parseInt(idProduct);
-                int quantity = Integer.parseInt(totalitems);
 
-                System.out.println(idfood);
-                System.out.println(quantity);
+                SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("MyPrefs", MODE_PRIVATE);
+                String token = sharedPreferences.getString("token", null);
 
-                Toast.makeText(getApplicationContext(), "Thêm vào giỏ hàng thành công!!!", Toast.LENGTH_SHORT).show();
+                if(token == null) {
+                    Intent intent = new Intent(DetailsFoodActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                } else {
+                    TextView totalitemsdialog = dialogView.findViewById(R.id.textView9);
+                    String totalitems = totalitemsdialog.getText().toString();
+                    int idfood = Integer.parseInt(idProduct);
+                    int quantity = Integer.parseInt(totalitems);
 
-                add_food_to_cart(idfood, quantity);
+                    add_food_to_cart(idfood, quantity);
 
-                dialog.dismiss();
+                    dialog.dismiss();
+                }
+
             }
         });
     }
@@ -273,7 +278,12 @@ public class DetailsFoodActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String json = response.body().string();
-
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getApplicationContext(), "Thêm vào giỏ hàng thành công!!!", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
 

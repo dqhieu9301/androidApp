@@ -16,9 +16,11 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -44,8 +46,10 @@ import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class CartFragment extends Fragment {
@@ -76,7 +80,10 @@ public class CartFragment extends Fragment {
 
         String token = sharedPreferences.getString("token", null);
         if (token == null) {
-            showCustomDialog();
+            ConstraintLayout containerCart = view.findViewById(R.id.containerCart);
+            containerCart.setVisibility(View.GONE);
+            Intent intent = new Intent(getContext(), LoginActivity.class);
+            startActivity(intent);
         }
         else{
             getRecylerView(view, token);
@@ -102,17 +109,32 @@ public class CartFragment extends Fragment {
     }
 
     private void getBuy() {
+        String str_body = "{\"id\": "+ 1 +",\"quantity\": " + 1 + "}";
+        MediaType mediaType = MediaType.parse("application/json");
+        RequestBody body = RequestBody.create(mediaType, str_body);
+
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        String token = sharedPreferences.getString("token", null);
         OkHttpClient client = new OkHttpClient();
         String url = "http://20.205.137.244/api/cart-product/buy-products-in-cart";
-        Request request = new Request.Builder().url(url).build();
-        try (Response response = client.newCall(request).execute()) {
-            String responseData = response.body().string();
-            // Process the response data here
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
+        Request request = new Request.Builder().url(url).post(body).addHeader("Authorization", "Bearer " + token).build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                System.out.println(e);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String json = response.body().string();
+                Toast.makeText(context.getApplicationContext(), "Đặt hàng thành công!!!", Toast.LENGTH_SHORT).show();
+
+
+            }
+        });
+
+    }
     private void getRecylerView(View view, String token) {
         recyclerView1 = view.findViewById(R.id.recycleView_listFoods);
         OkHttpClient client = new OkHttpClient();
