@@ -1,21 +1,16 @@
 package com.example.appandroid.model;
 
-import java.io.Serializable;
+public class RegisterUser {
+    private String username, password, fullname, address , phone;
 
-public class User implements Serializable {
-  private String username;
-  private String password;
-  private String fullname;
-  private String address;
-  private String phone;
+    public RegisterUser(String username, String password, String fullname, String address, String phone) {
+        this.username = username;
+        this.password = password;
+        this.fullname = fullname;
+        this.address = address;
+        this.phone = phone;
+    }
 
-  public User(String username, String password, String fullname, String address, String phone){
-      this.username = username;
-      this.password = password;
-      this.fullname = fullname;
-      this.address = address;
-      this.phone = phone;
-  }
     public String getUsername() {
         return username;
     }
