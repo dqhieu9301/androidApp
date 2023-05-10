@@ -10,6 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
         <LinearLayout
+            android:id="@+id/containerInforUser"
             android:layout_width="390dp"
             android:layout_height="785dp"
             android:background="#FFFFFF"
@@ -26,10 +27,11 @@
                 android:orientation="horizontal">
 
                 <ImageView
+                    android:tint="@android:color/white"
                     android:id="@+id/imageView9"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
+                    android:layout_weight="0.5"
                     android:src="@drawable/baseline_account_circle_24" />
 
                 <LinearLayout
@@ -74,8 +76,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="309dp"
-                android:layout_marginLeft="25dp"
-                android:layout_marginTop="80dp"
+                android:layout_margin="20dp"
                 android:orientation="vertical">
 
                 <TextView
@@ -93,12 +94,6 @@
                     android:textColor="#FFFFFFFF"
                     android:orientation="horizontal">
 
-                    <ImageView
-                        android:id="@+id/imageView20"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:src="@drawable/icondt" />
 
                     <TextView
                         android:id="@+id/textView12"
@@ -106,15 +101,21 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center_vertical"
-                        android:text="Số điện thoại" />
+                        android:text="Số điện thoại"
+                        android:textSize="15dp"
+                        android:textColor="#000000"/>
                 </LinearLayout>
 
                 <EditText
                     android:id="@+id/editTextTextPersonName5"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
+                    android:layout_marginRight="30dp"
                     android:ems="10"
-                    android:inputType="textPersonName" />
+                    android:inputType="textPersonName"
+                    android:text="123"
+                    android:textColor="#000000"
+                    android:focusable="false"/>
 
                 <Space
                     android:layout_width="match_parent"
@@ -125,19 +126,15 @@
                     android:layout_height="30dp"
                     android:orientation="horizontal">
 
-                    <ImageView
-                        android:id="@+id/imageView21"
-                        android:layout_width="36dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/ic_home_black_24dp" />
+
 
                     <TextView
                         android:id="@+id/textView14"
                         android:layout_width="321dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
+                        android:textSize="15dp"
+                        android:textColor="#000000"
                         android:gravity="center_vertical"
                         android:text="Địa chỉ" />
                 </LinearLayout>
@@ -147,7 +144,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:ems="10"
-                    android:inputType="textPersonName" />
+                    android:inputType="textPersonName"
+                    android:text="123"
+                    android:layout_marginRight="30dp"
+                    android:textColor="#000000"
+                    android:focusable="false"/>
 
                 <Space
                     android:layout_width="match_parent"
@@ -158,12 +159,6 @@
                     android:layout_height="30dp"
                     android:orientation="horizontal">
 
-                    <ImageView
-                        android:id="@+id/imageView22"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:src="@drawable/icon_username" />
 
                     <TextView
                         android:id="@+id/textView15"
@@ -171,7 +166,9 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center_vertical"
-                        android:text="tên tài khoản" />
+                        android:text="Tên tài khoản"
+                        android:textSize="15dp"
+                        android:textColor="#000000"/>
                 </LinearLayout>
 
                 <EditText
@@ -179,19 +176,20 @@
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:ems="10"
-                    android:inputType="textPersonName" />
+                    android:inputType="textPersonName"
+                    android:text="123"
+                    android:layout_marginRight="30dp"
+                    android:textColor="#000000"
+                    android:focusable="false"/>
 
 
             </LinearLayout>
 
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="20dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
-                android:layout_marginLeft="25dp">
+                android:layout_marginLeft="20dp">
 
                 <ImageView
                     android:id="@+id/imagelogout"
@@ -201,7 +199,7 @@
                     android:src="@drawable/iconlogin" />
 
                 <TextView
-                    android:id="@+id/textView16"
+                    android:id="@+id/logout"
                     android:layout_width="16dp"
                     android:layout_height="31dp"
                     android:layout_weight="1"

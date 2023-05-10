@@ -108,13 +108,13 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/textView4"
+                android:id="@+id/back_to_home"
                 android:layout_width="151dp"
                 android:layout_height="35dp"
                 android:layout_weight="1"
                 android:layout_marginLeft="5dp"
                 android:gravity="center|left"
-                android:text="Quên mật khẩu?"
+                android:text="Trang chủ"
                 android:textColor="#FFFFFF" />
 
             <TextView
