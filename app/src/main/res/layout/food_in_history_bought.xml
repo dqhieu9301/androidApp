@@ -15,7 +15,7 @@
 
 
         <ImageView
-            android:id="@+id/img"
+            android:id="@+id/imgProductHistory"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_margin="5dp"
@@ -25,7 +25,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/name"
+            android:id="@+id/nameProductHistory"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="105dp"
@@ -35,14 +35,14 @@
             android:textSize="25dp"
             android:textStyle="bold"
 
-            app:layout_constraintStart_toEndOf="@id/img"
+            app:layout_constraintStart_toEndOf="@id/imgProductHistory"
             app:layout_constraintTop_toTopOf="parent"
             tools:layout_editor_absoluteY="16dp">
 
         </TextView>
 
         <TextView
-            android:id="@+id/cost"
+            android:id="@+id/costProductHistory"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
@@ -52,8 +52,8 @@
             android:textColor="@color/material_on_background_emphasis_medium"
             android:textSize="18dp"
             android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@id/img"
-            app:layout_constraintTop_toBottomOf="@id/name"
+            app:layout_constraintStart_toEndOf="@id/imgProductHistory"
+            app:layout_constraintTop_toBottomOf="@id/nameProductHistory"
             tools:layout_editor_absoluteY="16dp">
 
         </TextView>
@@ -65,29 +65,41 @@
             android:background="@color/red"
             android:text="Thêm"
             android:textSize="9dp"
-            app:layout_constraintBottom_toTopOf="@+id/total"
+            app:layout_constraintBottom_toTopOf="@+id/totalProductHistory"
             app:layout_constraintEnd_toEndOf="parent">
 
         </Button>
 
         <TextView
-            android:id="@+id/quantity"
+            android:id="@+id/quantityProductHistory"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
+            android:layout_marginTop="4dp"
             android:gravity="center"
             android:text="Số lượng: 2"
             android:textColor="@color/black"
             android:textSize="18dp"
-            android:textStyle="bold"
 
-            app:layout_constraintTop_toBottomOf="@id/cost"
-            tools:layout_editor_absoluteX="136dp">
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@id/costProductHistory"
+            tools:layout_editor_absoluteX="110dp"
+            tools:ignore="MissingConstraints">
 
         </TextView>
 
         <TextView
-            android:id="@+id/total"
+            android:id="@+id/dateProductHistory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="Ngày đặt: 20/3/2023"
+            android:textSize="12dp"
+            app:layout_constraintStart_toEndOf="@+id/imgProductHistory"
+            app:layout_constraintTop_toBottomOf="@+id/quantityProductHistory"></TextView>
+
+        <TextView
+            android:id="@+id/totalProductHistory"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"

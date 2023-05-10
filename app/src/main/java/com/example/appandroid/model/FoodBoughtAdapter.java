@@ -37,14 +37,14 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 //
-public class FoodBoughtAdapter extends RecyclerView.Adapter<FoodBoughtAdapter.FoodBoughtViewHolder>{
+public class FoodBoughtAdapter extends RecyclerView.Adapter<FoodBoughtAdapter.FoodBoughtViewHolder> {
 
-    private List<ItemCart> pList;
+    private List<ProductHistory> pList;
 
     private Context context;
-    private ItemCart itemCart;
+    private ProductHistory productHistory;
 
-    public FoodBoughtAdapter(List<ItemCart> pList, Context context) {
+    public FoodBoughtAdapter(List<ProductHistory> pList, Context context) {
         this.pList = pList;
         this.context = context;
     }
@@ -59,26 +59,26 @@ public class FoodBoughtAdapter extends RecyclerView.Adapter<FoodBoughtAdapter.Fo
 
     @Override
     public void onBindViewHolder(@NonNull FoodBoughtViewHolder holder, int position) {
-        itemCart = pList.get(position);
+        productHistory = pList.get(position);
         int ps;
-        ps = pList.indexOf(itemCart);
+        ps = pList.indexOf(productHistory);
 
-        if (itemCart == null) {
+        if (productHistory == null) {
             return;
         }
-        Picasso.get().load(itemCart.getProduct().getPath()).into(holder.img);
-        holder.name.setText(itemCart.getProduct().getName());
-        holder.cost.setText("Giá: " + itemCart.getProduct().getCost() + " VND");
-        holder.quantity.setText(itemCart.getQuantity() + "");
-        holder.total.setText("Tổng: " + itemCart.getProduct().getCost() * itemCart.getQuantity() + " VND");
+        Picasso.get().load(productHistory.getPath()).into(holder.img);
+        holder.name.setText(productHistory.getName());
+        holder.cost.setText("Giá: " + productHistory.getCost() + " VND");
+        holder.quantity.setText(productHistory.getQuantity() + "");
+        holder.total.setText("Tổng: " + productHistory.getCost() * productHistory.getQuantity() + " VND");
 
         holder.img.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                String name = itemCart.getProduct().getName();
+                String name = productHistory.getName();
                 Intent intent = new Intent(context, DetailProductActivity.class);
-                intent.putExtra("idProduct", itemCart.getProduct().getId());
+                intent.putExtra("idProduct", productHistory.getId());
                 context.startActivity(intent);
             }
         });
@@ -86,7 +86,7 @@ public class FoodBoughtAdapter extends RecyclerView.Adapter<FoodBoughtAdapter.Fo
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, DetailProductActivity.class);
-                intent.putExtra("idProduct", itemCart.getProduct().getId());
+                intent.putExtra("idProduct", productHistory.getId());
                 context.startActivity(intent);
             }
         });
@@ -94,8 +94,8 @@ public class FoodBoughtAdapter extends RecyclerView.Adapter<FoodBoughtAdapter.Fo
         holder.add_to_cart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                itemCart = pList.get(ps);
-                add_food_to_cart(itemCart);
+                productHistory = pList.get(ps);
+                add_food_to_cart(productHistory);
             }
         });
 
@@ -107,8 +107,9 @@ public class FoodBoughtAdapter extends RecyclerView.Adapter<FoodBoughtAdapter.Fo
             return pList.size();
         return 0;
     }
-    public void add_food_to_cart(ItemCart itemCart){
-        String str_body = "{\"id\": "+ itemCart.getProduct().getId() +"\"quantity\": 1 }";
+
+    public void add_food_to_cart(ProductHistory productHistory) {
+        String str_body = "{\"id\": " + productHistory.getId() + "\"quantity\": 1 }";
         MediaType mediaType = MediaType.parse("application/json");
         RequestBody body = RequestBody.create(mediaType, str_body);
         OkHttpClient client = new OkHttpClient();
@@ -126,23 +127,26 @@ public class FoodBoughtAdapter extends RecyclerView.Adapter<FoodBoughtAdapter.Fo
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String json = response.body().string();
-                }
+            }
         });
 
     }
+
     public class FoodBoughtViewHolder extends RecyclerView.ViewHolder {
         private ImageView img;
-        private TextView name, cost, quantity, total;
+        private TextView name, cost, quantity, total, date;
 
         private Button add_to_cart;
+
         public FoodBoughtViewHolder(@NonNull View itemView) {
             super(itemView);
-            img = itemView.findViewById(R.id.img);
-            name = itemView.findViewById(R.id.name);
-            cost = itemView.findViewById(R.id.cost);
-            quantity = itemView.findViewById(R.id.quantity);
-            total = itemView.findViewById(R.id.total);
+            img = itemView.findViewById(R.id.imgProductHistory);
+            name = itemView.findViewById(R.id.nameProductHistory);
+            cost = itemView.findViewById(R.id.costProductHistory);
+            quantity = itemView.findViewById(R.id.quantityProductHistory);
+            total = itemView.findViewById(R.id.totalProductHistory);
             add_to_cart = itemView.findViewById(R.id.add_to_cart);
+            date = itemView.findViewById(R.id.dateProductHistory);
         }
 
     }

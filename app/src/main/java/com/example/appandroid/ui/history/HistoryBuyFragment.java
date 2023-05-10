@@ -27,6 +27,7 @@ import com.example.appandroid.model.FoodBoughtAdapter;
 import com.example.appandroid.model.ItemCart;
 import com.example.appandroid.model.ListProductAdapter;
 import com.example.appandroid.model.Product;
+import com.example.appandroid.model.ProductHistory;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import com.squareup.moshi.Types;
@@ -48,12 +49,12 @@ import okhttp3.Response;
 public class HistoryBuyFragment extends Fragment {
     private Context context;
     private RecyclerView recyclerView1, recyclerView2;
-    private JsonAdapter<List<ItemCart>> jsonAdapter;
+    private JsonAdapter<List<ProductHistory>> jsonAdapter;
 
     private ListProductAdapter productAdapter;
 
     private FoodBoughtAdapter foodBoughtAdapter;
-    private List<ItemCart> listItemCarts;
+    private List<ProductHistory> productsHistory;
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -67,15 +68,7 @@ public class HistoryBuyFragment extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_cart, container, false);
-        recyclerView1 = view.findViewById(R.id.recycleView_listFoods);
-
-        recyclerView2 = view.findViewById(R.id.recycleView_listProducts);
-        productAdapter = new ListProductAdapter(getList(), context);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 2);
-        recyclerView2.setLayoutManager(gridLayoutManager);
-        recyclerView2.setAdapter(productAdapter);
-
+        View view = inflater.inflate(R.layout.fragment_history_buy, container, false);
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("MyPrefs", MODE_PRIVATE);
 //        sharedPreferences.edit().clear().commit();
         String token = sharedPreferences.getString("token", null);
@@ -83,7 +76,13 @@ public class HistoryBuyFragment extends Fragment {
         if (token == null) {
             showCustomDialog();
         }
-
+        recyclerView1 = view.findViewById(R.id.recycleView_listFoods);
+        getRecylerView();
+//        recyclerView2 = view.findViewById(R.id.recycleView_listProducts);
+//        productAdapter = new ListProductAdapter(getList(), context);
+//        GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 2);
+//        recyclerView2.setLayoutManager(gridLayoutManager);
+//        recyclerView2.setAdapter(productAdapter);
         return view;
     }
 
@@ -91,7 +90,7 @@ public class HistoryBuyFragment extends Fragment {
 
         OkHttpClient client = new OkHttpClient();
         Moshi moshi = new Moshi.Builder().build();
-        Type productsType = Types.newParameterizedType(List.class, ItemCart.class);
+        Type productsType = Types.newParameterizedType(List.class, ProductHistory.class);
         jsonAdapter = moshi.adapter(productsType);
 
         String url = "http://20.205.137.244/api/cart-product/get-list-product-history";
@@ -110,12 +109,12 @@ public class HistoryBuyFragment extends Fragment {
                 String json = response.body().string();
                 try {
                     JSONObject reader = new JSONObject(json);
-                    String item_string = reader.getString("listProduct");
-                    listItemCarts = jsonAdapter.fromJson(item_string);
+                    String products_string = reader.getString("listProductHistory");
+                    productsHistory = jsonAdapter.fromJson(products_string);
                     ((Activity) context).runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            actionListItemCart(listItemCarts);
+                            actionListItemCart(productsHistory);
                         }
                     });
 
@@ -128,9 +127,9 @@ public class HistoryBuyFragment extends Fragment {
         });
     }
 
-    private void actionListItemCart(List<ItemCart> ItemCarts) {
+    private void actionListItemCart(List<ProductHistory> productsHistory) {
         Context context = getContext();
-        foodBoughtAdapter = new FoodBoughtAdapter(ItemCarts, context);
+        foodBoughtAdapter = new FoodBoughtAdapter(productsHistory, context);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 1);
         recyclerView1.setLayoutManager(gridLayoutManager);
         recyclerView1.setAdapter(foodBoughtAdapter);
