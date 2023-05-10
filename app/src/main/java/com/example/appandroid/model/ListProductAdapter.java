@@ -1,6 +1,9 @@
 package com.example.appandroid.model;
 
+import static java.security.AccessController.getContext;
+
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.appandroid.DetailsFoodActivity;
 import com.example.appandroid.R;
 import com.squareup.picasso.Picasso;
 
@@ -40,10 +44,13 @@ public class ListProductAdapter extends RecyclerView.Adapter<ListProductAdapter.
         holder.name.setText(product.getName().toString());
         holder.cost.setText(product.getCost() + " VND");
         Picasso.get().load(product.getPath()).into(holder.imageView);
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
+        holder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Context context = view.getContext();
+                Intent intent = new Intent(context, DetailsFoodActivity.class);
+                intent.putExtra("idProduct", product.getId() + "");
+                context.startActivity(intent);
             }
         });
     }
