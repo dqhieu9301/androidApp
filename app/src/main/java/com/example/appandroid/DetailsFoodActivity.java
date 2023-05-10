@@ -19,6 +19,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.appandroid.model.Product;
 import com.squareup.moshi.JsonAdapter;
@@ -241,17 +242,24 @@ public class DetailsFoodActivity extends AppCompatActivity {
                 int idfood = Integer.parseInt(idProduct);
                 int quantity = Integer.parseInt(totalitems);
 
+                System.out.println(idfood);
+                System.out.println(quantity);
+
+                Toast.makeText(getApplicationContext(), "Thêm vào giỏ hàng thành công!!!", Toast.LENGTH_SHORT).show();
+
                 add_food_to_cart(idfood, quantity);
+
+                dialog.dismiss();
             }
         });
     }
 
     public void add_food_to_cart(int idfood, int quantity){
-        String str_body = "{\"id\": "+ idfood +"\"quantity\":"+ quantity + "}";
+        String str_body = "{\"id\": "+ idfood +",\"quantity\": " + quantity + "}";
         MediaType mediaType = MediaType.parse("application/json");
         RequestBody body = RequestBody.create(mediaType, str_body);
         OkHttpClient client = new OkHttpClient();
-        String url = "http://20.205.137.244/api/cart-product/add_to_cart";
+        String url = "http://20.205.137.244/api/cart-product/add-to-cart";
         SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("MyPrefs", MODE_PRIVATE);
         String token = sharedPreferences.getString("token", "");
         Request request = new Request.Builder().url(url).post(body).addHeader("Authorization", "Bearer " + token).build();
@@ -265,28 +273,6 @@ public class DetailsFoodActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String json = response.body().string();
-                System.out.println("OK ROI DJT ME MAY");
-
-//                AlertDialog.Builder builder = new AlertDialog.Builder(DetailsFoodActivity.this);
-//                builder.setTitle("Thêm sản phẩm vào giỏ hàng thành công");
-//                builder.setMessage("Bạn muốn tiếp tục mua sắm hay xem giỏ hàng?");
-//                builder.setPositiveButton("Tiếp tục mua sắm", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        dialog.dismiss();
-//                    }
-//                });
-//                builder.setNegativeButton("Xem giỏ hàng", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        dialog.dismiss();
-////                        Intent intent = new Intent(DetailsFoodActivity.this, ActivityCart.class);
-////                        startActivity(intent);
-//                    }
-//                });
-//
-//                AlertDialog dialog = builder.create();
-//                dialog.show();
 
             }
         });
