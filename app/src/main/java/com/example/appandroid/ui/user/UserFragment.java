@@ -69,6 +69,7 @@ public class UserFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_user, container, false);
         imageView = view.findViewById(R.id.imagelogout);
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("MyPrefs", MODE_PRIVATE);
+
         String token = sharedPreferences.getString("token", null);
 
         edtTen = view.findViewById(R.id.editTextTextPersonName7);

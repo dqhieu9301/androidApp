@@ -110,12 +110,11 @@ public class LoginActivity extends AppCompatActivity {
                 client.newCall(request).enqueue(new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
-                        System.out.println(1);
+                        System.out.println(e);
                     }
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
                         String json = response.body().string();
-                        System.out.println(json);
                         try {
                             JSONObject reader = new JSONObject(json);
                             int statusCode = reader.getInt("statusCode");
@@ -131,6 +130,7 @@ public class LoginActivity extends AppCompatActivity {
                                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                 startActivity(intent);
                             }
+
                         } catch (JSONException e) {
                             throw new RuntimeException(e);
                         }

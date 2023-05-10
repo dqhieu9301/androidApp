@@ -46,7 +46,8 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
     private Context context;
     private ItemCart itemCart;
     private Fragment fragment;
-    public FoodAdapter(List<ItemCart> pList, Context context,Fragment fragment) {
+
+    public FoodAdapter(List<ItemCart> pList, Context context, Fragment fragment) {
         this.pList = pList;
         this.context = context;
         this.fragment = fragment;
@@ -80,19 +81,16 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
         holder.img.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                String name = itemCart.getProduct().getName();
                 Intent intent = new Intent(context, DetailProductActivity.class);
-                intent.putExtra("product_name", name);
+                intent.putExtra("idProduct", itemCart.getProduct().getId());
                 context.startActivity(intent);
             }
         });
         holder.name.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String name = itemCart.getProduct().getName();
                 Intent intent = new Intent(context, DetailProductActivity.class);
-                intent.putExtra("product_name", name);
+                intent.putExtra("idProduct", itemCart.getProduct().getId());
                 context.startActivity(intent);
             }
         });
@@ -101,30 +99,11 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
             public void onClick(View v) {
                 itemCart = pList.get(ps);
                 itemCart.setQuantity(itemCart.getQuantity() + 1);
-                System.out.println(ps);
                 pList.set(ps, itemCart);
                 holder.total.setText("Tổng: " + itemCart.getProduct().getCost() * itemCart.getQuantity() + " VND");
                 holder.quantity.setText(itemCart.getQuantity() + "");
-                OkHttpClient client = new OkHttpClient();
                 showTotal_payment();
-                String quantity = String.format("{\"quantity\": %d}", itemCart.getQuantity());
-                MediaType mediaType = MediaType.parse("application/json");
-                RequestBody body = RequestBody.create(mediaType, quantity);
-                SharedPreferences sharedPreferences = context.getApplicationContext().getSharedPreferences("MyPrefs", MODE_PRIVATE);
-                String token = sharedPreferences.getString("token", "");
-                String url = "http://192.168.100.26:3000/api/cart-product/update/" + itemCart.getId();
-                Request request = new Request.Builder().url(url).put(body).addHeader("Authorization", "Bearer " + token).build();
-                client.newCall(request).enqueue(new Callback() {
-                    @Override
-                    public void onFailure(Call call, IOException e) {
-                        System.out.println(e);
-                    }
-
-                    @Override
-                    public void onResponse(Call call, Response response) throws IOException {
-                        String json = response.body().string();
-                    }
-                });
+                update_quatity(itemCart.getId(), itemCart.getQuantity());
             }
         });
         holder.sub.setOnClickListener(new View.OnClickListener() {
@@ -137,27 +116,8 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
                     holder.total.setText("Tổng: " + itemCart.getProduct().getCost() * itemCart.getQuantity() + " VND");
                     holder.quantity.setText(itemCart.getQuantity() + "");
                     showTotal_payment();
-                    OkHttpClient client = new OkHttpClient();
-                    String url = "http://192.168.100.26:3000/api/cart-product/update/" + itemCart.getId();
-                    String quantity = "{\"quantity\": " + itemCart.getQuantity() + "}";
+                    update_quatity(itemCart.getId(), itemCart.getQuantity());
 
-                    MediaType mediaType = MediaType.parse("application/json");
-                    RequestBody body = RequestBody.create(mediaType, quantity);
-                    SharedPreferences sharedPreferences = context.getSharedPreferences("MyPrefs", MODE_PRIVATE);
-                    String token = sharedPreferences.getString("token", "");
-                    Request request = new Request.Builder().url(url).put(body).addHeader("Authorization", "Bearer " + token).build();
-
-                    client.newCall(request).enqueue(new Callback() {
-                        @Override
-                        public void onFailure(Call call, IOException e) {
-                            System.out.println(e);
-                        }
-
-                        @Override
-                        public void onResponse(Call call, Response response) throws IOException {
-                            String json = response.body().string();
-                        }
-                    });
                 }
             }
         });
@@ -166,7 +126,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
             public void onClick(View v) {
 //                pList.remove(itemCart);
                 OkHttpClient client = new OkHttpClient();
-                String url = "http://192.168.100.26:3000/api/cart-product/delete/" + itemCart.getId();
+                String url = "http://20.205.137.244/api/cart-product/delete/" + itemCart.getId();
                 SharedPreferences sharedPreferences = context.getSharedPreferences("MyPrefs", MODE_PRIVATE);
                 String token = sharedPreferences.getString("token", "");
                 Request request = new Request.Builder().url(url).delete().addHeader("Authorization", "Bearer " + token).build();
@@ -182,9 +142,10 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
                         String json = response.body().string();
                         Gson gson = new Gson();
 
-                        Map<String, Object> map = gson.fromJson(json, new TypeToken<Map<String, Object>>(){}.getType());
+                        Map<String, Object> map = gson.fromJson(json, new TypeToken<Map<String, Object>>() {
+                        }.getType());
                         String message = (String) map.get("message");
-                        if (message.equals("delete success")){
+                        if (message.equals("delete success")) {
                             Context context1 = v.getContext();
                             ((Activity) context1).runOnUiThread(new Runnable() {
                                 @Override
@@ -211,22 +172,20 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
             return pList.size();
         return 0;
     }
-    public void showTotal_payment(){
+    public void showTotal_payment() {
         int total = 0;
-        if (pList.size() > 0)
-        {
+        if (pList.size() > 0) {
             for (ItemCart itemCart : pList) {
                 total += itemCart.getQuantity() * itemCart.getProduct().getCost();
             }
         }
         TextView textView = fragment.getView().findViewById(R.id.total_payment);
-        textView.setText("Tổng thanh toán\n" + total + " VND");
+        textView.setText(total + " VND");
     }
+
     public class FoodViewHolder extends RecyclerView.ViewHolder {
         private ImageView img, sub, add;
         private TextView name, cost, quantity, total;
-
-
 
 
         private Button delete;
@@ -244,5 +203,30 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
         }
 
     }
+
+    public void update_quatity(int idItemCart, int quanity_food) {
+        OkHttpClient client = new OkHttpClient();
+        String url = "http://20.205.137.244/api/cart-product/update/" + idItemCart;
+        String quantity = "{\"quantity\": " + quanity_food + "}";
+
+        MediaType mediaType = MediaType.parse("application/json");
+        RequestBody body = RequestBody.create(mediaType, quantity);
+        SharedPreferences sharedPreferences = context.getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        String token = sharedPreferences.getString("token", "");
+        Request request = new Request.Builder().url(url).put(body).addHeader("Authorization", "Bearer " + token).build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                System.out.println(e);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String json = response.body().string();
+            }
+        });
+    }
+
 
 }

@@ -1,5 +1,4 @@
-package com.example.appandroid.ui.cart;
-
+package com.example.appandroid.ui.history;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -14,8 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,12 +21,13 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.appandroid.LoginActivity;
-import com.example.appandroid.MainActivity;
 import com.example.appandroid.R;
 import com.example.appandroid.model.FoodAdapter;
+import com.example.appandroid.model.FoodBoughtAdapter;
 import com.example.appandroid.model.ItemCart;
 import com.example.appandroid.model.ListProductAdapter;
 import com.example.appandroid.model.Product;
+import com.example.appandroid.model.ProductHistory;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import com.squareup.moshi.Types;
@@ -48,41 +46,21 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class CartFragment extends Fragment {
+public class HistoryBuyFragment extends Fragment {
     private Context context;
     private RecyclerView recyclerView1, recyclerView2;
-    private FoodAdapter foodAdapter;
-    private ListProductAdapter productAdapter;
-    public TextView total_payment;
-    private Button buttonBuy;
-    private List<ItemCart> listItemCarts;
-    private JsonAdapter<List<ItemCart>> jsonAdapter;
+    private JsonAdapter<List<ProductHistory>> jsonAdapter;
 
+    private ListProductAdapter productAdapter;
+
+    private FoodBoughtAdapter foodBoughtAdapter;
+    private List<ProductHistory> productsHistory;
     private List<Product> products;
+
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         this.context = context;
-    }
-
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_cart, container, false);
-        total_payment = view.findViewById(R.id.total_payment);
-        buttonBuy = view.findViewById(R.id.buttonBuy);
-
-
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences("MyPrefs", MODE_PRIVATE);
-
-        String token = sharedPreferences.getString("token", null);
-        if (token == null) {
-            showCustomDialog();
-        }
-        else{
-            getRecylerView(view, token);
-        }
-        get_recomendable_product(view);
-        return view;
     }
 
     @Override
@@ -91,36 +69,28 @@ public class CartFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        buttonBuy.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getBuy();
-            }
-        });
-    }
-
-    private void getBuy() {
-        OkHttpClient client = new OkHttpClient();
-        String url = "http://20.205.137.244/api/cart-product/buy-products-in-cart";
-        Request request = new Request.Builder().url(url).build();
-        try (Response response = client.newCall(request).execute()) {
-            String responseData = response.body().string();
-            // Process the response data here
-        } catch (IOException e) {
-            e.printStackTrace();
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_history_buy, container, false);
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        String token = sharedPreferences.getString("token", null);
+        if (token == null) {
+            showCustomDialog();
+        } else {
+            getRecylerView(view, token);
         }
+        get_recomendable_product(view);
+        return view;
     }
 
     private void getRecylerView(View view, String token) {
         recyclerView1 = view.findViewById(R.id.recycleView_listFoods);
         OkHttpClient client = new OkHttpClient();
         Moshi moshi = new Moshi.Builder().build();
-        Type productsType = Types.newParameterizedType(List.class, ItemCart.class);
+        Type productsType = Types.newParameterizedType(List.class, ProductHistory.class);
         jsonAdapter = moshi.adapter(productsType);
 
-        String url = "http://20.205.137.244/api/cart-product/getAll";
+        String url = "http://20.205.137.244/api/cart-product/get-list-product-history";
+
         Request request = new Request.Builder().url(url).addHeader("Authorization", "Bearer " + token).build();
         client.newCall(request).enqueue(new Callback() {
             @Override
@@ -133,12 +103,12 @@ public class CartFragment extends Fragment {
                 String json = response.body().string();
                 try {
                     JSONObject reader = new JSONObject(json);
-                    String item_string = reader.getString("listProduct");
-                    listItemCarts = jsonAdapter.fromJson(item_string);
+                    String products_string = reader.getString("listProductHistory");
+                    productsHistory = jsonAdapter.fromJson(products_string);
                     ((Activity) context).runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            actionListItemCart(listItemCarts);
+                            actionListItemCart(productsHistory, token);
                         }
                     });
 
@@ -151,23 +121,16 @@ public class CartFragment extends Fragment {
         });
     }
 
-
-    private void actionListItemCart(List<ItemCart> ItemCarts) {
-        int total = 0;
-
-        for (ItemCart itemCart : ItemCarts) {
-            total += itemCart.getQuantity() * itemCart.getProduct().getCost();
-        }
-        total_payment.setText(total + " VND");
+    private void actionListItemCart(List<ProductHistory> productsHistory, String token) {
         Context context = getContext();
-        foodAdapter = new FoodAdapter(ItemCarts, context, this);
+        foodBoughtAdapter = new FoodBoughtAdapter(productsHistory, context, token);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 1);
         recyclerView1.setLayoutManager(gridLayoutManager);
-        recyclerView1.setAdapter(foodAdapter);
+        recyclerView1.setAdapter(foodBoughtAdapter);
     }
 
     private void get_recomendable_product(View view) {
-        recyclerView2 = view.findViewById(R.id.recycleView_listProducts);
+        recyclerView2 = view.findViewById(R.id.listRecomendProducts);
         OkHttpClient client = new OkHttpClient();
         Moshi moshi = new Moshi.Builder().build();
         Type productsType = Types.newParameterizedType(List.class, Product.class);
@@ -219,6 +182,7 @@ public class CartFragment extends Fragment {
 
         dialog.show();
     }
+
     private void actionProducts(List<Product> products) {
         productAdapter = new ListProductAdapter(products, context);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 2);
