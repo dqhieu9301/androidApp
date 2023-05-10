@@ -55,6 +55,8 @@ public class HistoryBuyFragment extends Fragment {
 
     private FoodBoughtAdapter foodBoughtAdapter;
     private List<ProductHistory> productsHistory;
+    private List<Product> products;
+
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -70,24 +72,18 @@ public class HistoryBuyFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_history_buy, container, false);
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("MyPrefs", MODE_PRIVATE);
-//        sharedPreferences.edit().clear().commit();
         String token = sharedPreferences.getString("token", null);
-        System.out.println(token);
         if (token == null) {
             showCustomDialog();
+        } else {
+            getRecylerView(view, token);
         }
-        recyclerView1 = view.findViewById(R.id.recycleView_listFoods);
-        getRecylerView();
-//        recyclerView2 = view.findViewById(R.id.recycleView_listProducts);
-//        productAdapter = new ListProductAdapter(getList(), context);
-//        GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 2);
-//        recyclerView2.setLayoutManager(gridLayoutManager);
-//        recyclerView2.setAdapter(productAdapter);
+        get_recomendable_product(view);
         return view;
     }
 
-    private void getRecylerView() {
-
+    private void getRecylerView(View view, String token) {
+        recyclerView1 = view.findViewById(R.id.recycleView_listFoods);
         OkHttpClient client = new OkHttpClient();
         Moshi moshi = new Moshi.Builder().build();
         Type productsType = Types.newParameterizedType(List.class, ProductHistory.class);
@@ -95,8 +91,6 @@ public class HistoryBuyFragment extends Fragment {
 
         String url = "http://20.205.137.244/api/cart-product/get-list-product-history";
 
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences("MyPrefs", MODE_PRIVATE);
-        String token = sharedPreferences.getString("token", "");
         Request request = new Request.Builder().url(url).addHeader("Authorization", "Bearer " + token).build();
         client.newCall(request).enqueue(new Callback() {
             @Override
@@ -114,7 +108,7 @@ public class HistoryBuyFragment extends Fragment {
                     ((Activity) context).runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            actionListItemCart(productsHistory);
+                            actionListItemCart(productsHistory, token);
                         }
                     });
 
@@ -127,22 +121,48 @@ public class HistoryBuyFragment extends Fragment {
         });
     }
 
-    private void actionListItemCart(List<ProductHistory> productsHistory) {
+    private void actionListItemCart(List<ProductHistory> productsHistory, String token) {
         Context context = getContext();
-        foodBoughtAdapter = new FoodBoughtAdapter(productsHistory, context);
+        foodBoughtAdapter = new FoodBoughtAdapter(productsHistory, context, token);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 1);
         recyclerView1.setLayoutManager(gridLayoutManager);
         recyclerView1.setAdapter(foodBoughtAdapter);
     }
-    private List<Product> getList() {
-        List<Product> list = new ArrayList<>();
-        String path_image = "http://res.cloudinary.com/doe8iuzbo/image/upload/v1682134318/ejo8rvmlf0zf9m1qp7mt.png";
-        list.add(new Product(1, "pizza", "bánh", path_image, 200000, 1));
-        path_image = "http://res.cloudinary.com/doe8iuzbo/image/upload/v1682134334/ngu68ubwokfe9rmoqwxv.png";
-        list.add(new Product(2, "hamburger", "bánh", path_image, 30000, 1));
-        path_image = "http://res.cloudinary.com/doe8iuzbo/image/upload/v1682135561/kz2vqbixxcvhatvmsgba.png";
-        list.add(new Product(3, "fried_chicken", "bánh", path_image, 50000, 1));
-        return list;
+
+    private void get_recomendable_product(View view) {
+        recyclerView2 = view.findViewById(R.id.listRecomendProducts);
+        OkHttpClient client = new OkHttpClient();
+        Moshi moshi = new Moshi.Builder().build();
+        Type productsType = Types.newParameterizedType(List.class, Product.class);
+        JsonAdapter<List<Product>> jsonProductAdapter = moshi.adapter(productsType);
+        String url = "http://20.205.137.244/api/cart-product/random-product";
+        Request request = new Request.Builder().url(url).build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                System.out.println(e);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String json = response.body().string();
+                try {
+                    JSONObject reader = new JSONObject(json);
+                    String products_string = reader.getString("listProductRandom");
+                    products = jsonProductAdapter.fromJson(products_string);
+                    ((Activity) context).runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            actionProducts(products);
+                        }
+                    });
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+
+        });
     }
 
     void showCustomDialog() {
@@ -161,5 +181,12 @@ public class HistoryBuyFragment extends Fragment {
         });
 
         dialog.show();
+    }
+
+    private void actionProducts(List<Product> products) {
+        productAdapter = new ListProductAdapter(products, context);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 2);
+        recyclerView2.setLayoutManager(gridLayoutManager);
+        recyclerView2.setAdapter(productAdapter);
     }
 }
