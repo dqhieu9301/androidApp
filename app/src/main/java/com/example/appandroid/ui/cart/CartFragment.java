@@ -63,6 +63,7 @@ public class CartFragment extends Fragment {
     private JsonAdapter<List<ItemCart>> jsonAdapter;
 
     private List<Product> products;
+
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -80,12 +81,8 @@ public class CartFragment extends Fragment {
 
         String token = sharedPreferences.getString("token", null);
         if (token == null) {
-            ConstraintLayout containerCart = view.findViewById(R.id.containerCart);
-            containerCart.setVisibility(View.GONE);
-            Intent intent = new Intent(getContext(), LoginActivity.class);
-            startActivity(intent);
-        }
-        else{
+            showCustomDialog();
+        } else {
             getRecylerView(view, token);
         }
         get_recomendable_product(view);
@@ -109,16 +106,76 @@ public class CartFragment extends Fragment {
     }
 
     private void getBuy() {
-        String str_body = "{\"id\": "+ 1 +",\"quantity\": " + 1 + "}";
-        MediaType mediaType = MediaType.parse("application/json");
-        RequestBody body = RequestBody.create(mediaType, str_body);
-
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("MyPrefs", MODE_PRIVATE);
         String token = sharedPreferences.getString("token", null);
-        OkHttpClient client = new OkHttpClient();
-        String url = "http://20.205.137.244/api/cart-product/buy-products-in-cart";
+        get_listItemCarts(token);
+        if (listItemCarts.size() > 0) {
+            String str_body = "{\"id\": " + 1 + ",\"quantity\": " + 1 + "}";
+            MediaType mediaType = MediaType.parse("application/json");
+            RequestBody body = RequestBody.create(mediaType, str_body);
 
-        Request request = new Request.Builder().url(url).post(body).addHeader("Authorization", "Bearer " + token).build();
+
+            OkHttpClient client = new OkHttpClient();
+            String url = "http://20.205.137.244/api/cart-product/buy-products-in-cart";
+
+            Request request = new Request.Builder().url(url).post(body).addHeader("Authorization", "Bearer " + token).build();
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    System.out.println(e);
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    String json = response.body().string();
+                    if (json.equals("{\"message\":\"buy product success\"}")) {
+                        ((Activity) context).runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                List<ItemCart> listItemCarts_temp = new ArrayList<>();
+                                Toast.makeText(context.getApplicationContext(), "Đặt hàng thành công!!!", Toast.LENGTH_SHORT).show();
+                                Context context = getContext();
+                                CartFragment fragment = (CartFragment) getChildFragmentManager().findFragmentById(R.id.containerCart);
+                                foodAdapter = new FoodAdapter(listItemCarts_temp, context, fragment);
+//                                GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 1);
+//                                recyclerView1.setLayoutManager(gridLayoutManager);
+                                recyclerView1.setAdapter(foodAdapter);
+                            }
+                        });
+                    } else {
+                        ((Activity) context).runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(context.getApplicationContext(), "Đặt hàng thất bại!!!", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+
+
+                }
+            });
+        } else {
+            ((Activity) context).runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(context.getApplicationContext(), "Không có mặt hàng trong giỏ", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+
+    }
+
+    private void get_listItemCarts(String token) {
+
+
+        OkHttpClient client = new OkHttpClient();
+        Moshi moshi = new Moshi.Builder().build();
+        Type productsType = Types.newParameterizedType(List.class, ItemCart.class);
+        jsonAdapter = moshi.adapter(productsType);
+
+        String url = "http://20.205.137.244/api/cart-product/getAll";
+        Request request = new Request.Builder().url(url).addHeader("Authorization", "Bearer " + token).build();
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -128,13 +185,17 @@ public class CartFragment extends Fragment {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String json = response.body().string();
-                Toast.makeText(context.getApplicationContext(), "Đặt hàng thành công!!!", Toast.LENGTH_SHORT).show();
-
-
+                try {
+                    JSONObject reader = new JSONObject(json);
+                    String item_string = reader.getString("listProduct");
+                    listItemCarts = jsonAdapter.fromJson(item_string);
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
-
     }
+
     private void getRecylerView(View view, String token) {
         recyclerView1 = view.findViewById(R.id.recycleView_listFoods);
         OkHttpClient client = new OkHttpClient();
@@ -241,6 +302,7 @@ public class CartFragment extends Fragment {
 
         dialog.show();
     }
+
     private void actionProducts(List<Product> products) {
         productAdapter = new ListProductAdapter(products, context);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 2);
