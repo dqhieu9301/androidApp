@@ -137,8 +137,6 @@ public class CartFragment extends Fragment {
                                 Context context = getContext();
                                 CartFragment fragment = (CartFragment) getChildFragmentManager().findFragmentById(R.id.containerCart);
                                 foodAdapter = new FoodAdapter(listItemCarts_temp, context, fragment);
-//                                GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 1);
-//                                recyclerView1.setLayoutManager(gridLayoutManager);
                                 recyclerView1.setAdapter(foodAdapter);
                             }
                         });
