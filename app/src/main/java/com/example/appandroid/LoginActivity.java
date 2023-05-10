@@ -87,18 +87,17 @@ public class LoginActivity extends AppCompatActivity {
                 String json = gson.toJson(account);
                 MediaType mediaType = MediaType.parse("application/json");
                 RequestBody body = RequestBody.create(mediaType, json);
-                String url = "http://20.205.137.244/api/auth/login";
+                String url = "http://192.168.27.1:3000/api/auth/login";
                 Request request = new Request.Builder().url(url).post(body).build();
                 client.newCall(request).enqueue(new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
-                        System.out.println(1);
+                        System.out.println(e);
                     }
 
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
                         String json = response.body().string();
-                        System.out.println(json);
                         try {
                             JSONObject reader = new JSONObject(json);
                             int statusCode = reader.getInt("statusCode");
@@ -114,6 +113,7 @@ public class LoginActivity extends AppCompatActivity {
                                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                 startActivity(intent);
                             }
+
                         } catch (JSONException e) {
                             throw new RuntimeException(e);
                         }
