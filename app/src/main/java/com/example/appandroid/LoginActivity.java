@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -33,7 +34,7 @@ public class LoginActivity extends AppCompatActivity {
 
     ImageView imageView;
     Button btn;
-    TextView textView, errorAccount;
+    TextView textView, errorAccount, backToHome;
 
     EditText editTextTextPersonName2,editTextTextPassword2;
     @Override
@@ -47,7 +48,17 @@ public class LoginActivity extends AppCompatActivity {
         editTextTextPersonName2 = findViewById(R.id.editTextTextPersonName2);
         editTextTextPassword2 = findViewById(R.id.editTextTextPassword2);
         errorAccount = findViewById(R.id.errorAccount);
+        backToHome = findViewById(R.id.back_to_home);
+
         this.getSupportActionBar().hide();
+
+        backToHome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                startActivity(intent);
+            }
+        });
 
         editTextTextPersonName2.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -76,9 +87,16 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                if(editTextTextPassword2.getText().toString() == "" && editTextTextPassword2.getText().toString() == "") {
-
+                if(TextUtils.isEmpty(editTextTextPersonName2.getText())) {
+                    editTextTextPersonName2.setError("Không được bỏ trống");
+                    return;
                 }
+
+                if(TextUtils.isEmpty(editTextTextPassword2.getText())) {
+                    editTextTextPassword2.setError("Không được bỏ trống");
+                    return;
+                }
+
                 OkHttpClient client = new OkHttpClient();
                 String username = editTextTextPersonName2.getText().toString();
                 String pass = editTextTextPassword2.getText().toString();
@@ -94,7 +112,6 @@ public class LoginActivity extends AppCompatActivity {
                     public void onFailure(Call call, IOException e) {
                         System.out.println(1);
                     }
-
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
                         String json = response.body().string();
@@ -117,13 +134,9 @@ public class LoginActivity extends AppCompatActivity {
                         } catch (JSONException e) {
                             throw new RuntimeException(e);
                         }
-
                     }
-
                 });
-
             }
-
         });
     }
 }
